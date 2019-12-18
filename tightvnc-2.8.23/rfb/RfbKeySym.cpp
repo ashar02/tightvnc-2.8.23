@@ -131,10 +131,18 @@ void RfbKeySym::processKeyEvent(unsigned short virtKey,
 bool isDeadCharacter(WCHAR ch)
 {
   return (ch == '^'    || 
-          ch == 0x00a8 || // '?'
+          ch == 0x00a8 || // 
           ch == '~'    || 
-          ch == 0x00b4 || // '?'
-          ch == '`');
+          ch == 0x00b4 || // 
+          ch == '`'    ||
+          ch == 0x02c7 || // 
+          ch == 0x02d8 || // 
+          ch == 0x00b0 || // 
+          ch == 0x02d9 || // 
+          ch == 0x02dd || //
+          ch == 0x00b8 || // 
+          ch == 0x02db    //
+    );
 }
 
 bool isDoubleDeadCharacters(WCHAR *buff)

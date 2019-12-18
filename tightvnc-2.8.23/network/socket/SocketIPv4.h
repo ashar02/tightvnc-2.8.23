@@ -129,6 +129,8 @@ public:
    */
   int recv(char *buffer, int size, int flags = 0) throw(IOException);
 
+  int available();
+
   /**
    * Returns local address of socket (for listening socket).
    * @param addr output parameter that will contain socket address.

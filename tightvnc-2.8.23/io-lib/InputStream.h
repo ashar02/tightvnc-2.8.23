@@ -44,6 +44,7 @@ public:
    * implementation of input stream).
    */
   virtual size_t read(void *buffer, size_t len) = 0;
+  virtual size_t available() = 0;
 };
 
 #endif

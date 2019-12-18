@@ -113,10 +113,11 @@ UINT32 TightDecoder::readTightPixel(RfbInputGate *input, int bytesPerCPixel)
   if (!m_isCPixel) {
     input->readFully(buffer, bytesPerCPixel);
   } else {
+    input->readFully(buffer, 3);
+    UINT8 t = buffer[2];
+    buffer[2] = buffer[0];
+    buffer[0] = t;
     buffer[3] = 0;
-    buffer[2] = input->readUInt8();
-    buffer[1] = input->readUInt8();
-    buffer[0] = input->readUInt8();
   }
   memcpy(&color, buffer, bytesPerCPixel);
   return color;
@@ -308,22 +309,23 @@ void TightDecoder::drawPalette(FrameBuffer *fb,
 
   int x = dstRect->left;
   int y = dstRect->top;
+  int stride = fb->getBytesPerRow();
+  char *basePtr = (char*)fb->getBufferPtr(x, y);
   if (palette.size() == 2) {
     int offset = 8;
     int index = -1;
     for (int i = 0; i < dstLength; i++) {
-      void *pixelPtr = fb->getBufferPtr(x + i % width, y + i / width);
+      void *pixelPtr = basePtr + bytesPerPixel * (i % width) + stride * (i / width);
       if (offset == 0 || i % width == 0) {
         offset = 8;
         index++;
       }
       offset--;
       memcpy(pixelPtr, &palette[(pixels[index] >> offset) & 0x01], bytesPerPixel);
-
     }
   } else { // size of palette != 2
     for (int i = 0; i < dstLength; i++) {
-      void *pixelPtr = fb->getBufferPtr(x + i % width, y + i / width);
+      void *pixelPtr = basePtr + bytesPerPixel * (i % width) + stride * (i / width);
       if (pixels[i] < palette.size()) {
         memcpy(pixelPtr, &palette[pixels[i]], bytesPerPixel);
       } else {

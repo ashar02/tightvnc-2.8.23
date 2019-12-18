@@ -68,6 +68,8 @@ public:
    */
   virtual size_t write(const void *buffer, size_t len) throw(IOException);
 
+  virtual size_t available() { return 0; };
+
   // Returns pipe handle to write
   HANDLE getWriteHandle() const;
 

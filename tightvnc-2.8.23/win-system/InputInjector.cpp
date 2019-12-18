@@ -298,17 +298,30 @@ SHORT InputInjector::searchVirtKey(WCHAR ch, HKL hklCurrent)
   // Special trick to get round a problem when printing the ^6 characters
   // instead of estimated 6.
   if (!modifiersPressed) {
-    if (((unsigned int)hklCurrent & 0xffff0000) == 0xf0010000 &&
-        ch == _T('6')) {
+    unsigned short layout = ((unsigned int)hklCurrent & 0xffff0000) >> 16;
+    const unsigned short TURKISH = MAKELANGID(LANG_TURKISH, SUBLANG_DEFAULT);
+    const unsigned short NORWEGIAN = MAKELANGID(LANG_NORWEGIAN, SUBLANG_DEFAULT);
+    const unsigned short BRAZILIAN = MAKELANGID(LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN);
+
+    if (layout == 0xf001 && ch == _T('6')) {
       throw Exception(_T("Special case for the '6' character on the USA")
                       _T(" international keyboard, it will be inserted as")
                       _T(" an unicode"));
     }
-    if (((unsigned int)hklCurrent & 0xffff0000) == 0x04140000 &&
-        ch == _T('\\')) {
+    if (layout == BRAZILIAN && ch == _T('6')) {
+      throw Exception(_T("Special case for the '6' character on the brazilian")
+        _T(" keyboard, it will be inserted as")
+        _T(" an unicode"));
+    }
+    if (layout == NORWEGIAN && ch == _T('\\')) {
       throw Exception(_T("Special case for the '\\' character on the norwegian")
                       _T(" keyboard, it will be inserted as")
                       _T(" an unicode"));
+    }
+    if (layout == TURKISH && ch == _T('3')) {
+      throw Exception(_T("Special case for the '3' character on the turkish-Q")
+        _T(" keyboard, it will be inserted as")
+        _T(" an unicode"));
     }
   }
   return vkKeyScanResult;

@@ -51,6 +51,8 @@ public:
   // @throw Exception on error.
   virtual void close();
 
+  virtual size_t available();
+
 protected:
   SocketIPv4 *m_socket;
 

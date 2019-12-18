@@ -197,6 +197,9 @@
     <ClCompile Include="WinVideoRegionUpdaterImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DummyScreenDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbnormDeskTermListener.h">
@@ -401,6 +404,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WinVideoRegionUpdaterImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyScreenDriver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

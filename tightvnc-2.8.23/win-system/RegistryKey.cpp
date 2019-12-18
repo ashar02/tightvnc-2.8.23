@@ -190,7 +190,7 @@ bool RegistryKey::getValueAsInt32(const TCHAR *name, int *out)
   }
 
   DWORD type = REG_DWORD;
-  DWORD size = sizeof(out);
+  DWORD size = 4;
 
   return RegQueryValueEx(m_key, name, 0, &type, (BYTE *)out, &size) == ERROR_SUCCESS;
 }
@@ -202,7 +202,7 @@ bool RegistryKey::getValueAsInt64(const TCHAR *name, long *out)
   }
 
   DWORD type = REG_QWORD;
-  DWORD size = sizeof(out);
+  DWORD size = 8;
 
   return RegQueryValueEx(m_key, name, 0, &type, (BYTE *)out, &size) == ERROR_SUCCESS;
 }
@@ -214,7 +214,7 @@ bool RegistryKey::getValueAsString(const TCHAR *name, StringStorage *out)
   }
 
   DWORD type = REG_SZ;
-  DWORD size = sizeof(out);
+  DWORD size;
 
   if (RegQueryValueEx(m_key, name, 0, &type, NULL, &size) != ERROR_SUCCESS) {
     return false;
@@ -249,7 +249,6 @@ bool RegistryKey::getValueAsBinary(const TCHAR *name, void *value, size_t *sizeI
   }
   *sizeInBytes = (size_t)size;
   return true;
-
 }
 
 bool RegistryKey::getSubKeyNames(StringStorage *subKeyNames, size_t *count)

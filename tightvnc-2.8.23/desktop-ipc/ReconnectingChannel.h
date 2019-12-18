@@ -48,6 +48,8 @@ public:
   // @throw Exception on error.
   virtual void close();
 
+  virtual size_t available() { return 0; };
+
 private:
   // @param funName - is a function name that will be placed to the
   // ReconnectException text.

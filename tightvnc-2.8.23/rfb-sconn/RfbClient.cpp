@@ -30,6 +30,7 @@
 #include "RfbInitializer.h"
 #include "ClientAuthListener.h"
 #include "server-config-lib/Configurator.h"
+#include "io-lib/BufferedInputStream.h"
 
 RfbClient::RfbClient(NewConnectionEvents *newConnectionEvents,
                      SocketIPv4 *socket,
@@ -180,7 +181,8 @@ void RfbClient::execute()
   SocketStream sockStream(m_socket);
 
   RfbOutputGate output(&sockStream);
-  RfbInputGate input(&sockStream);
+  BufferedInputStream bufInput(&sockStream);
+  RfbInputGate input(&bufInput);
 
   FileTransferRequestHandler *fileTransfer = 0;
 

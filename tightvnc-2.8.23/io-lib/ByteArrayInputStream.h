@@ -50,6 +50,8 @@ public:
    */
   virtual size_t read(void *buffer, size_t len) throw(IOException);
 
+  virtual size_t available();
+
 protected:
   const char *m_buffer;
   size_t m_bufferSize;

@@ -60,3 +60,7 @@ void WinFileChannel::seek(INT64 n)
     throw IOException(e.getMessage());
   }
 }
+
+size_t WinFileChannel::available() {
+  return m_winFile.available();
+}

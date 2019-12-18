@@ -58,3 +58,7 @@ size_t ByteArrayInputStream::read(void *buffer, size_t len)
 
   return bytesToCopy;
 }
+
+size_t ByteArrayInputStream::available() {
+	return m_left;
+}

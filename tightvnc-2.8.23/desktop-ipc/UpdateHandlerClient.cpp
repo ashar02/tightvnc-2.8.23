@@ -74,11 +74,11 @@ void UpdateHandlerClient::extract(UpdateContainer *updateContainer)
 
   UpdateContainer updCont;
   try {
-    m_log->info(_T("UpdateHandlerClient: send EXTRACT_REQ"));
+    m_log->debug(_T("UpdateHandlerClient: send EXTRACT_REQ"));
     m_forwGate->writeUInt8(EXTRACT_REQ); // query for extract
 
     // Get screen size changed
-    m_log->info(_T("UpdateHandlerClient: Get screen size changed"));
+    m_log->debug(_T("UpdateHandlerClient: Get screen size changed"));
     updCont.screenSizeChanged = m_forwGate->readUInt8() != 0;
 
     if (updCont.screenSizeChanged) {
@@ -112,7 +112,7 @@ void UpdateHandlerClient::extract(UpdateContainer *updateContainer)
     }
 
     // Get video region
-    m_log->info(_T("UpdateHandlerClient: Get video region"));
+    m_log->debug(_T("UpdateHandlerClient: Get video region"));
     readRegion(&updCont.videoRegion, m_forwGate);
     // Get changed region
     unsigned int countChangedRect = m_forwGate->readUInt32();

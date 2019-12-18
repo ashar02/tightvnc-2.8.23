@@ -42,7 +42,7 @@ void UpdateContainer::clear()
   cursorPosChanged = false;
   cursorShapeChanged = false;
   copySrc.clear();
-  //cursorPos.clear();
+  cursorPos.clear();
 }
 
 UpdateContainer& UpdateContainer::operator=(const UpdateContainer& src)

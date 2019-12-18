@@ -191,7 +191,7 @@ size_t WinFile::write(const void *buff, size_t count)
   DWORD count32 = (DWORD)count;
   _ASSERT(count == count32);
   if (count != count32) {
-    throw IOException(_T("Requested size to read is too big"));
+    throw IOException(_T("Requested size to write is too big"));
   }
   DWORD result = 0;
   if (WriteFile(m_hFile, buff, count32, &result, 0) == 0) {
@@ -200,4 +200,11 @@ size_t WinFile::write(const void *buff, size_t count)
     throw IOException(errText.getString());
   }
   return result;
+}
+
+size_t WinFile::available() {
+  LARGE_INTEGER fileSize;
+  GetFileSizeEx(m_hFile, &fileSize);
+  size_t pos = SetFilePointer(m_hFile, 0, 0, FILE_CURRENT);
+  return fileSize.QuadPart - pos;
 }

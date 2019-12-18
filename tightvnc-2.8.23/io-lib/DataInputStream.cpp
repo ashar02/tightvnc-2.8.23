@@ -37,6 +37,11 @@ DataInputStream::~DataInputStream()
 {
 }
 
+size_t DataInputStream::available()
+{
+  return m_inputStream->available();
+}
+
 size_t DataInputStream::read(void *buffer, size_t len)
 {
   return m_inputStream->read(buffer, len);

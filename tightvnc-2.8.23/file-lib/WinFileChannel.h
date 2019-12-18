@@ -48,6 +48,7 @@ public:
 
   // Inherited from Channel.
   virtual void close() throw(Exception);
+  size_t available();
 
 private:
   WinFile m_winFile;

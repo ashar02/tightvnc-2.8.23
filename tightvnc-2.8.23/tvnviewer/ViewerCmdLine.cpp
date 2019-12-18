@@ -302,14 +302,14 @@ void ViewerCmdLine::parseMouseShape()
 
 void ViewerCmdLine::parseMouseCursor()
 {
-  if (isPresent(MOUSE_LOCAL)) {
+  if (isPresent(MOUSE_CURSOR)) {
     m_conConf->requestShapeUpdates(false);
     m_conConf->ignoreShapeUpdates(false);
-    if (m_options[MOUSE_LOCAL] == NO) {
+    if (m_options[MOUSE_CURSOR] == NO) {
       m_conConf->requestShapeUpdates(true);
       m_conConf->ignoreShapeUpdates(true);
     } else {
-      if (m_options[MOUSE_LOCAL] == LOCAL) {
+      if (m_options[MOUSE_CURSOR] == LOCAL) {
         m_conConf->requestShapeUpdates(true);
       }
     }

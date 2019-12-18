@@ -31,6 +31,7 @@
 #include "network/socket/SocketIPv4.h"
 #include "network/socket/SocketStream.h"
 #include "thread/LocalMutex.h"
+#include "io-lib/BufferedInputStream.h"
 
 class TcpConnection
 {
@@ -53,6 +54,7 @@ private:
   SocketIPv4 *m_socket;
   bool m_socketOwner;
   SocketStream *m_socketStream;
+  BufferedInputStream *m_bufInput;
   RfbInputGate *m_input;
   RfbOutputGate *m_output;
   bool m_RfbGatesOwner;

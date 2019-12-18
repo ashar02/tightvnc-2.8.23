@@ -261,6 +261,7 @@ void UpdateSender::sendCursorShapeUpdate(const PixelFormat *fmt,
 void UpdateSender::sendCursorPosUpdate()
 {
   Point pos = m_cursorUpdates.getCurPos();
+  m_log->debug(_T("Sending cursor position update: (%d,%d)"), pos.x, pos.y);
   sendRectHeader(pos.x, pos.y, 0, 0, PseudoEncDefs::POINTER_POS);
 }
 
@@ -408,16 +409,14 @@ void UpdateSender::sendUpdate()
       m_log->debug(_T("Desktop resize is enabled, sending NewFBSize %dx%d"),
                  lastViewPortDim.width, lastViewPortDim.height);
       sendNewFBSize(&lastViewPortDim);
-      // FIXME: "Dazzle" does not seem like a good word here.
-      m_log->debug(_T("Dazzle changed region"));
-      m_updateKeeper->dazzleChangedReg();
     } else {
       m_log->debug(_T("Desktop resize is disabled, sending blank screen"));
       sendFbInClientDim(&encodeOptions, frameBuffer, &clientDim,
                         &frameBuffer->getPixelFormat());
-      m_log->debug(_T("Dazzle changed region"));
-      m_updateKeeper->dazzleChangedReg();
     }
+    // FIXME: "Dazzle" does not seem like a good word here.
+    m_log->debug(_T("Dazzle changed region"));
+    m_updateKeeper->dazzleChangedReg();
   } else {
     m_log->debug(_T("Processing normal updates"));
     CursorShape cursorShape;
@@ -452,6 +451,7 @@ void UpdateSender::sendUpdate()
     updCont.changedRegion.crop(&frameBufferRect);
     shareAppRegion.crop(&frameBufferRect);
     prevShareAppRegion.crop(&frameBufferRect);
+    m_losslessClean.crop(&frameBufferRect);
 
     // If Tight encoding is not supported by the client, convert video updates
     // to normal updates so that the preferred encoding will be used.
@@ -552,7 +552,7 @@ void UpdateSender::sendUpdate()
       numTotalRects++;
       m_log->debug(_T("Adding a pseudo-rectangle for cursor shape update"));
     }
-    m_log->debug(_T("Total number of rectangles and pseudo-rectangles: %d"),
+    m_log->detail(_T("Total number of rectangles and pseudo-rectangles: %d"),
                numTotalRects);
 
     // FIXME: Handle this better, e.g. send first 65534 rectangles.
@@ -566,7 +566,6 @@ void UpdateSender::sendUpdate()
       m_output->writeUInt16((UINT16)numTotalRects);
 
       if (updCont.cursorPosChanged) {
-        m_log->debug(_T("Sending cursor position update"));
         sendCursorPosUpdate();
       }
       if (updCont.cursorShapeChanged) {
@@ -599,7 +598,7 @@ void UpdateSender::sendUpdate()
         area, pt2.cycle/1000000.);
       m_log->debug(_T("After Sending normal rectangles %f process time, %f kernel time, %f wall clock time"), pt2.process, pt2.kernel, dt);
 
-      m_log->debug(_T("Time between request and answer is (in milliseconds): %u"),
+      m_log->info(_T("Time between request and answer is (in milliseconds): %u"),
                  (unsigned int)(DateTime::now() - reqTimePoint).getTime());
     } else {
       m_log->debug(_T("Nothing to send, restoring requested regions"));
@@ -702,7 +701,7 @@ void UpdateSender::readUpdateRequest(RfbInputGate *io)
     combinedReqRegions.add(&m_requestedFullReg);
   }
 
-  m_log->detail(_T("update requested (%d, %d, %dx%d, incremental = %d)")
+  m_log->info(_T("update requested (%d, %d, %dx%d, incremental = %d)")
               _T(" by client (client #%d)"),
               reqRect.left, reqRect.top,
               reqRect.getWidth(), reqRect.getHeight(), (int)incremental,

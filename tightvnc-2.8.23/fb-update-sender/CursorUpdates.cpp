@@ -63,7 +63,6 @@ void CursorUpdates::update(const EncodeOptions *encodeOptions,
   // but the updCont->cursorPosChanged flag can be raised only cursor pos
   // is not blocked.
   if (posChanged) {
-    m_log->debug(_T("Checking cursor position"));
     bool cursorPosBlockingIsIgnored = !richEnabled;
     posChanged = checkCursorPos(updCont, viewPort, cursorPosBlockingIsIgnored);
   }
@@ -108,6 +107,8 @@ void CursorUpdates::update(const EncodeOptions *encodeOptions,
     updCont->cursorPosChanged = false;
   } else if (fullRegReq) {
     m_log->debug(_T("Raising cursorPosChanged (full region requested)"));
+    // ignore cursor position changing blocking on full request
+    checkCursorPos(updCont, viewPort, true);
     updCont->cursorPosChanged = true;
   }
   if (!richEnabled) {
@@ -190,6 +191,8 @@ bool CursorUpdates::checkCursorPos(UpdateContainer *updCont,
     m_cursorPos.x = cursorPos.x;
     m_cursorPos.y = cursorPos.y;
   }
+  m_log->debug(_T("CursorUpdates::checkCursorPos cursor position (%d,%d), changed:%d"),
+    m_cursorPos.x, m_cursorPos.y, positionChanged);
   return positionChanged;
 }
 

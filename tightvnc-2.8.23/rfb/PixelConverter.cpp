@@ -212,7 +212,12 @@ void PixelConverter::fillHexBitsTable(const PixelFormat *dstPf,
     UINT32 dstBlu = (srcBlu * dstBluMax / srcBluMax) << dstBluShift;
     m_hexBitsTable[i] = dstRed | dstGrn | dstBlu;
     if (dstPf->bigEndian != srcPf->bigEndian) {
-      m_hexBitsTable[i] = rotateUint32(m_hexBitsTable[i]);
+      if (dstPf->bitsPerPixel == 32) {
+        m_hexBitsTable[i] = rotateUint32(m_hexBitsTable[i]);
+      }
+      else if (dstPf->bitsPerPixel == 16) {
+        m_hexBitsTable[i] = (m_hexBitsTable[i] & 0xff) << 8 | (m_hexBitsTable[i] & 0xff00) >> 8;
+      }
     }
   }
 }

@@ -88,6 +88,15 @@ void SocketIPv4::connect(const SocketAddressIPv4 &addr)
   m_isBound = false;
 }
 
+int SocketIPv4::available()
+{
+  int result;
+  int err = ::ioctlsocket(m_socket, FIONREAD, reinterpret_cast<u_long*>(&result));
+  if (err != 0) 
+    return 0;
+  return result;
+}
+
 void SocketIPv4::close()
 {
   m_isClosed = true;

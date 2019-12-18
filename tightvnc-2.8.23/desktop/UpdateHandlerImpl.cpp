@@ -115,8 +115,12 @@ void UpdateHandlerImpl::extract(UpdateContainer *updateContainer)
   }
 
   // Cursor position must always be present.
-  m_log->debug(_T("UpdateHandlerImpl::extract : update cursor position"));
   updateContainer->cursorPos = m_screenDriver->getCursorPosition();
+  {
+    int x = updateContainer->cursorPos.x;
+    int y = updateContainer->cursorPos.y;
+    m_log->debug(_T("UpdateHandlerImpl::extract : update cursor position (%d,%d)"), x, y);
+  }
   // Checking for mouse shape changing
   if (updateContainer->cursorShapeChanged || m_fullUpdateRequested) {
     // Update cursor shape

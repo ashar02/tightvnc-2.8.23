@@ -322,6 +322,7 @@
     <ClCompile Include="DesktopConfigLocal.cpp" />
     <ClCompile Include="DesktopServerWatcher.cpp" />
     <ClCompile Include="DesktopWinImpl.cpp" />
+    <ClCompile Include="DummyScreenDriver.cpp" />
     <ClCompile Include="Win8CursorShape.cpp" />
     <ClCompile Include="Win8DeskDuplicationThread.cpp" />
     <ClCompile Include="WinCursorShapeUtils.cpp" />
@@ -389,6 +390,7 @@
     <ClInclude Include="DesktopFactory.h" />
     <ClInclude Include="DesktopServerWatcher.h" />
     <ClInclude Include="DesktopWinImpl.h" />
+    <ClInclude Include="DummyScreenDriver.h" />
     <ClInclude Include="Win8CursorShape.h" />
     <ClInclude Include="Win8DeskDuplicationThread.h" />
     <ClInclude Include="Win8DuplicationListener.h" />

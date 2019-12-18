@@ -97,6 +97,8 @@ public:
   // @throw exception on a system error.
   void flush();
 
+  virtual size_t available();
+
 private:
   HANDLE m_hFile;
   StringStorage m_pathToFile;

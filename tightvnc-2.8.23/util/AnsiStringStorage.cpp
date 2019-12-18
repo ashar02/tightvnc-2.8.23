@@ -88,7 +88,7 @@ void AnsiStringStorage::fromStringStorage(const StringStorage *src)
 #else
   // WideCharToMultiByte returns result length including terminating null character	
   int symbolCount = WideCharToMultiByte(CP_ACP, 0, src->getString(), -1, 
-                                        NULL, 0, NULL, NULL) + 1;
+                                        NULL, 0, NULL, NULL);
 
   // Allocate space for the requred size
   m_buffer.resize(symbolCount);

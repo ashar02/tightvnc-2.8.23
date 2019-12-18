@@ -114,8 +114,8 @@ void TcpConnection::connect()
 
     m_logWriter->detail(_T("Initialization of socket stream and input/output gates..."));
     m_socketStream = new SocketStream(m_socket);
-
-    m_input = new RfbInputGate(m_socketStream);
+    m_bufInput = new BufferedInputStream(m_socketStream);
+    m_input = new RfbInputGate(m_bufInput);
     m_output = new RfbOutputGate(m_socketStream);
     m_RfbGatesOwner = true;
   } else {
@@ -179,9 +179,18 @@ TcpConnection::~TcpConnection()
     if (m_socketStream != 0) {
       try {
         delete m_socketStream;
-      } catch (...) {
+      }
+      catch (...) {
       }
     }
+    if (m_bufInput != 0) {
+      try {
+        delete m_bufInput;
+      }
+      catch (...) {
+      }
+    }
+
   }
 
   // if host and port is defined, then need delete socket

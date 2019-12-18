@@ -60,7 +60,7 @@ void DesktopBaseImpl::getFrameBufferProperties(Dimension *dim, PixelFormat *pf)
 {
   _ASSERT(m_updateHandler != 0);
   _ASSERT(m_extDeskTermListener != 0);
-  m_log->info(_T("get frame buffer properties"));
+  m_log->debug(_T("get frame buffer properties"));
   try {
     m_updateHandler->getFrameBufferProp(dim, pf);
   } catch (Exception &e) {
@@ -167,7 +167,7 @@ bool DesktopBaseImpl::isApplicationInFocus(unsigned int procId)
 
 bool DesktopBaseImpl::isRemoteInputAllowed()
 {
-  m_log->info(_T("checking remote input allowing"));
+  m_log->debug(_T("checking remote input allowing"));
 
   bool enabled = !Configurator::getInstance()->getServerConfig()->isBlockingRemoteInput();
   enabled = enabled && !isRemoteInputTempBlocked();
@@ -241,17 +241,17 @@ void DesktopBaseImpl::sendUpdate()
   _ASSERT(m_extUpdSendingListener != 0);
 
   if (!m_extUpdSendingListener->isReadyToSend()) {
-    m_log->info(_T("nobody is ready for updates"));
+    m_log->detail(_T("nobody is ready for updates"));
     return;
   }
   UpdateContainer updCont;
   try {
     if (!m_fullReqRegion.isEmpty()) {
-      m_log->info(_T("set full update request to UpdateHandler"));
+      m_log->detail(_T("set full update request to UpdateHandler"));
       m_updateHandler->setFullUpdateRequested(&m_fullReqRegion);
     }
 
-    m_log->info(_T("extracting updates from UpdateHandler"));
+    m_log->detail(_T("extracting updates from UpdateHandler"));
     m_updateHandler->extract(&updCont);
   } catch (Exception &e) {
     m_log->info(_T("WinDesktop::sendUpdate() failed with error:%s"),
@@ -260,11 +260,10 @@ void DesktopBaseImpl::sendUpdate()
   }
 
   if (!updCont.isEmpty() || !m_fullReqRegion.isEmpty()) {
-    m_log->info(_T("UpdateContainer is not empty.")
+    m_log->debug(_T("UpdateContainer is not empty.")
               _T(" Updates will be given to all."));
     m_extUpdSendingListener->onSendUpdate(&updCont,
                                           m_updateHandler->getCursorShape());
-    m_log->info(_T("Updates have been given to all."));
     AutoLock al(&m_reqRegMutex);
     m_fullReqRegion.clear();
   } else {
@@ -274,13 +273,13 @@ void DesktopBaseImpl::sendUpdate()
 
 void DesktopBaseImpl::onUpdate()
 {
-  m_log->info(_T("update detected"));
+  m_log->detail(_T("update detected"));
   m_newUpdateEvent.notify();
 }
 
 void DesktopBaseImpl::onUpdateRequest(const Rect *rectRequested, bool incremental)
 {
-  m_log->info(_T("update requested"));
+  m_log->debug(_T("DesktopBaseImpl::onUpdateRequest: update requested"));
 
   AutoLock al(&m_reqRegMutex);
   if (!incremental) {
@@ -293,7 +292,7 @@ void DesktopBaseImpl::onClipboardUpdate(const StringStorage *newClipboard)
 {
   _ASSERT(m_extClipListener != 0);
 
-  m_log->info(_T("clipboard update detected"));
+  m_log->detail(_T("clipboard update detected"));
   bool isEqual;
   {
     AutoLock al(&m_storedClipCritSec);

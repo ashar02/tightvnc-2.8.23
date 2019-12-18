@@ -89,7 +89,10 @@ bool Win8ScreenDriver::applyNewScreenProperties()
 {
   try {
     m_log->debug(_T("Applying new screen properties, deleting old Win8ScreenDriverImpl"));
-    delete m_drvImpl;
+    if (m_drvImpl != 0) {
+      delete m_drvImpl;
+      m_drvImpl = 0;
+    }
     m_log->debug(_T("Applying new screen properties, creating new Win8ScreenDriverImpl"));
     Win8ScreenDriverImpl *drvImpl =
       new Win8ScreenDriverImpl(m_log, m_updateKeeper, m_fbLocalMutex, m_updateListener, m_detectionEnabled);

@@ -65,3 +65,7 @@ void SocketStream::close()
   }
   m_socket->close();
 }
+
+size_t SocketStream::available() {
+  return m_socket->available();
+}

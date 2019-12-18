@@ -49,6 +49,8 @@ public:
    */
   virtual size_t read(void *buffer, size_t len) throw(IOException);
 
+  virtual size_t available();
+
   /**
    * Reads exactly specified count of bytes from input stream.
    * @param buffer [out] target buffer to receive data.
