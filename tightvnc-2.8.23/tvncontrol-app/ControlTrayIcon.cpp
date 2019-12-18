@@ -171,15 +171,15 @@ void ControlTrayIcon::onRightButtonUp()
   case ID_CONFIGURATION:
     onConfigurationMenuItemClick();
     break;
-  case ID_OUTGOING_CONN:
-    onOutgoingConnectionMenuItemClick();
-    break;
-  case IDM_ATTACH_TO_DISPATCHER:
-    onAttachToDispatcher();
-    break;
-  case ID_ABOUT_TIGHTVNC_MENUITEM:
-    onAboutMenuItemClick();
-    break;
+  //case ID_OUTGOING_CONN:
+  //  onOutgoingConnectionMenuItemClick();
+  //  break;
+  //case IDM_ATTACH_TO_DISPATCHER:
+  //  onAttachToDispatcher();
+  //  break;
+  //case ID_ABOUT_TIGHTVNC_MENUITEM:
+  //  onAboutMenuItemClick();
+  //  break;
   case ID_CLOSE_CONTROL_INTERFACE:
     onCloseControlInterfaceMenuItemClick();
     break;

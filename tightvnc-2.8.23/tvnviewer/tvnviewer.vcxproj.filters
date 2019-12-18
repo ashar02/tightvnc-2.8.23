@@ -226,4 +226,12 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\swaplocal.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\swaplocal48.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

@@ -428,6 +428,10 @@
       <Project>{f9597c92-5d25-4a3c-bad6-8a2566fddd6f}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\swaplocal.bmp" />
+    <Image Include="res\swaplocal48.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
