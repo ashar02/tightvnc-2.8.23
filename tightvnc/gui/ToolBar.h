@@ -97,6 +97,10 @@ public:
   // in the toolbar.
   bool enableButton(int idButton, bool enable);
 
+  // hideButton() hides or shows the specified button 
+  // in the toolbar.
+  bool hideButton(int idButton, bool hide);
+
   // pressButton() presses or releases the specified button in the toolbar.
   bool pressButton(int idButton, bool press);
 

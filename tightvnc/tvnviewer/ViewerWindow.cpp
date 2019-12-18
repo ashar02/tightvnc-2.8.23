@@ -124,6 +124,8 @@ bool ViewerWindow::onCreate(LPCREATESTRUCT lps)
   m_menu.loadMenu();
   applySettings();
 
+  m_toolbar.hideButton(IDS_TB_SAVESESSION, 1);
+
   ViewerConfig *config = ViewerConfig::getInstance();
   bool bShowToolbar = config->isToolbarShown();
   if (!bShowToolbar) {

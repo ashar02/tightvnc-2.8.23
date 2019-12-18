@@ -56,7 +56,7 @@ void ViewerMenu::loadMenu()
   menu_item menu_items[] = {
     {SEPARATOR, 0},
     {MENU_ITEM, IDS_TB_NEWCONNECTION},
-    {MENU_ITEM, IDS_TB_SAVESESSION},
+    //{MENU_ITEM, IDS_TB_SAVESESSION},
     {MENU_ITEM, IDS_TB_CONNOPTIONS},
     {MENU_ITEM, IDS_TB_CONNINFO},
     {SEPARATOR, 0},
@@ -71,10 +71,10 @@ void ViewerMenu::loadMenu()
     {MENU_ITEM, IDS_TB_TRANSFER},
     {SEPARATOR, 0},
     {MENU_ITEM, IDS_TB_TOOLBAR},
-    {MENU_ITEM, IDS_TB_FULLSCREEN},
-    {SEPARATOR, 0},
-    {MENU_ITEM, IDS_TB_CONFIGURATION},
-    {MENU_ITEM, IDS_ABOUT_VIEWER}
+    {MENU_ITEM, IDS_TB_FULLSCREEN}//,
+    //{SEPARATOR, 0},
+    //{MENU_ITEM, IDS_TB_CONFIGURATION},
+    //{MENU_ITEM, IDS_ABOUT_VIEWER}
   };
   findStartIndex();
 

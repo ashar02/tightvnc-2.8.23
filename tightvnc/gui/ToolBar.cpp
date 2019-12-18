@@ -140,6 +140,13 @@ bool ToolBar::enableButton(int idButton, bool enable)
   return !!result;
 }
 
+bool ToolBar::hideButton(int idButton, bool hide)
+{
+	LRESULT result = SendMessage(m_hWndToolbar, TB_HIDEBUTTON,
+		idButton, MAKELONG(hide, 0));
+	return !!result;
+}
+
 bool ToolBar::pressButton(int idButton, bool press)
 {
   LRESULT result = SendMessage(m_hWndToolbar, TB_PRESSBUTTON,
