@@ -50,6 +50,11 @@ BOOL LoginDialog::onInitDialog()
   if (m_isListening) {
     m_listening.setEnabled(false);
   }
+
+  RECT rc;
+  GetWindowRect(getWindow(), &rc);
+  MoveWindow(getWindow(), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top - 176, TRUE);
+
   return TRUE;
 }
 

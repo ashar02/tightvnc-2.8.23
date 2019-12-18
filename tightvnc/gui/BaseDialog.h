@@ -71,6 +71,9 @@ public:
   // Puts this control foreground and activates it
   bool setForeground();
 
+  HWND getWindow();
+  void moveControl(int nIDDlgItem, int X, int Y, int nWidth, int nHeight, BOOL bRepaint);
+
 protected:
   /**
    * Sets default push button for dialog.

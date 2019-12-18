@@ -240,6 +240,21 @@ bool BaseDialog::setForeground()
   return m_ctrlThis.setForeground();
 }
 
+HWND BaseDialog::getWindow()
+{
+	return m_ctrlThis.getWindow();
+}
+
+void BaseDialog::moveControl(int nIDDlgItem, int X, int Y, int nWidth, int nHeight, BOOL bRepaint)
+{
+	RECT rc;
+	HWND ctlHWnd = GetDlgItem(getWindow(), nIDDlgItem);
+	GetWindowRect(ctlHWnd, &rc);
+	POINT pt = { rc.left, rc.top };
+	ScreenToClient(getWindow(), &pt);
+	MoveWindow(ctlHWnd, pt.x + X, pt.y + Y, rc.right - rc.left + nWidth, rc.bottom - rc.top + nHeight, bRepaint);
+}
+
 BOOL BaseDialog::onInitDialog()
 {
   return FALSE;
