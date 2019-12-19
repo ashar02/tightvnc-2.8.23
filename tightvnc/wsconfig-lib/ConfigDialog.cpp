@@ -138,6 +138,18 @@ BOOL ConfigDialog::onInitDialog()
 
   initControls();
 
+  RECT rect;
+  rect.left = rect.right = 173;
+  rect.top = rect.bottom = 110;
+  int adjustment = -rect.right;
+  int adjustment1 = -rect.bottom;
+  MapDialogRect(getWindow(), &rect);
+  moveDialog(0, 0, adjustment, adjustment1, TRUE);
+  moveControl(IDC_CONFIG_TAB, 0, 0, adjustment, adjustment1, TRUE);
+  moveControl(IDOK, adjustment, adjustment1, 0, 0, TRUE);
+  moveControl(IDCANCEL, adjustment, adjustment1, 0, 0, TRUE);
+  moveControl(IDC_APPLY, adjustment, adjustment1, 0, 0, TRUE);
+
   m_tabControl.addTab(NULL, _T("Temp"));
 
   m_serverConfigDialog.setParent(&m_ctrlThis);
@@ -179,14 +191,6 @@ BOOL ConfigDialog::onInitDialog()
 
   m_ctrlApplyButton.setEnabled(false);
   m_ctrlThis.setForeground();
-
-  int adjustment = -344;
-  int adjustment1 = -210;
-  moveDialog(0, 0, adjustment, adjustment1, TRUE);
-  moveControl(IDC_CONFIG_TAB, 0, 0, adjustment, adjustment1, TRUE);
-  moveControl(IDOK, adjustment, adjustment1, 0, 0, TRUE);
-  moveControl(IDCANCEL, adjustment, adjustment1, 0, 0, TRUE);
-  moveControl(IDC_APPLY, adjustment, adjustment1, 0, 0, TRUE);
 
   return FALSE;
 }
