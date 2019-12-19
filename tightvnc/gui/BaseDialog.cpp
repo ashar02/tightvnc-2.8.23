@@ -242,17 +242,25 @@ bool BaseDialog::setForeground()
 
 HWND BaseDialog::getWindow()
 {
-	return m_ctrlThis.getWindow();
+  return m_ctrlThis.getWindow();
+}
+
+void BaseDialog::moveDialog(int X, int Y, int nWidth, int nHeight, BOOL bRepaint)
+{
+  RECT rc;
+  HWND dlgHWnd = getWindow();
+  GetWindowRect(dlgHWnd, &rc);
+  MoveWindow(dlgHWnd, rc.left + X, rc.top + Y, rc.right - rc.left + nWidth, rc.bottom - rc.top + nHeight, bRepaint);
 }
 
 void BaseDialog::moveControl(int nIDDlgItem, int X, int Y, int nWidth, int nHeight, BOOL bRepaint)
 {
-	RECT rc;
-	HWND ctlHWnd = GetDlgItem(getWindow(), nIDDlgItem);
-	GetWindowRect(ctlHWnd, &rc);
-	POINT pt = { rc.left, rc.top };
-	ScreenToClient(getWindow(), &pt);
-	MoveWindow(ctlHWnd, pt.x + X, pt.y + Y, rc.right - rc.left + nWidth, rc.bottom - rc.top + nHeight, bRepaint);
+  RECT rc;
+  HWND ctlHWnd = GetDlgItem(getWindow(), nIDDlgItem);
+  GetWindowRect(ctlHWnd, &rc);
+  POINT pt = { rc.left, rc.top };
+  ScreenToClient(getWindow(), &pt);
+  MoveWindow(ctlHWnd, pt.x + X, pt.y + Y, rc.right - rc.left + nWidth, rc.bottom - rc.top + nHeight, bRepaint);
 }
 
 BOOL BaseDialog::onInitDialog()

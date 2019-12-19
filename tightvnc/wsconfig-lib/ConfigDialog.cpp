@@ -167,9 +167,9 @@ BOOL ConfigDialog::onInitDialog()
   moveDialogToTabControl(&m_videoRegionsConfigDialog);
 
   m_tabControl.addTab(&m_serverConfigDialog, StringTable::getString(IDS_SERVER_TAB_CAPTION));
-  m_tabControl.addTab(&m_portMappingDialog, StringTable::getString(IDS_EXTRA_PORTS_TAB_CAPTION));
-  m_tabControl.addTab(&m_ipAccessControlDialog, StringTable::getString(IDS_ACCESS_CONTROL_TAB_CAPTION));
-  m_tabControl.addTab(&m_videoRegionsConfigDialog, StringTable::getString(IDS_VIDEO_WINDOWS_TAB_CAPTION));
+  //m_tabControl.addTab(&m_portMappingDialog, StringTable::getString(IDS_EXTRA_PORTS_TAB_CAPTION));
+  //m_tabControl.addTab(&m_ipAccessControlDialog, StringTable::getString(IDS_ACCESS_CONTROL_TAB_CAPTION));
+  //m_tabControl.addTab(&m_videoRegionsConfigDialog, StringTable::getString(IDS_VIDEO_WINDOWS_TAB_CAPTION));
   m_tabControl.addTab(&m_administrationConfigDialog, StringTable::getString(IDS_ADMINISTRATION_TAB_CAPTION));
 
   m_tabControl.removeTab(0);
@@ -179,6 +179,14 @@ BOOL ConfigDialog::onInitDialog()
 
   m_ctrlApplyButton.setEnabled(false);
   m_ctrlThis.setForeground();
+
+  int adjustment = -344;
+  int adjustment1 = -210;
+  moveDialog(0, 0, adjustment, adjustment1, TRUE);
+  moveControl(IDC_CONFIG_TAB, 0, 0, adjustment, adjustment1, TRUE);
+  moveControl(IDOK, adjustment, adjustment1, 0, 0, TRUE);
+  moveControl(IDCANCEL, adjustment, adjustment1, 0, 0, TRUE);
+  moveControl(IDC_APPLY, adjustment, adjustment1, 0, 0, TRUE);
 
   return FALSE;
 }

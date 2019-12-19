@@ -135,34 +135,32 @@ BOOL OptionsDialog::onInitDialog()
   m_tcompLvl.setRange(0, 9);
   updateControlValues();
 
-  RECT rc;
-  GetWindowRect(getWindow(), &rc);
-  MoveWindow(getWindow(), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top - 203, TRUE);
-  
-  int adjustment = -49;
-  int adjustment1 = -17;
+  int adjustment = -203;
+  moveDialog(0, 0, 0, adjustment, TRUE);
+  adjustment = -49;
   moveControl(IDC_CCOMPRLVL, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SCOMP, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SQUALITY, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SFAST, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SBEST, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_STQUALITY, 0, adjustment, 0, 0, TRUE);
-
   moveControl(IDC_CJPEG, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SJPEG, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SPOOR, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SBEST2, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_STQUALITY2, 0, adjustment, 0, 0, TRUE);
   moveControl(IDC_SQUALITY2, 0, adjustment, 0, 0, TRUE);
+  int adjustment1 = -17;
   moveControl(IDC_FORMAT, 0, 0, 0, adjustment + adjustment1, TRUE);
-
   moveControl(IDC_DISPLAY, 0, 0, 0, adjustment1, TRUE);
-  moveControl(IDC_CVIEWONLY, 223, -163, 0, 0, TRUE);
-  moveControl(IDC_CDISCLIP, 223, -163, 0, 0, TRUE);
-  moveControl(IDC_RESTRICTIONS, 223, -163, 0, 0, TRUE);
-
-  moveControl(IDOK, 0, -201, 0, 0, TRUE);
-  moveControl(IDCANCEL, 0, -201, 0, 0, TRUE);
+  adjustment = 223;
+  adjustment1 = -163;
+  moveControl(IDC_CVIEWONLY, adjustment, adjustment1, 0, 0, TRUE);
+  moveControl(IDC_CDISCLIP, adjustment, adjustment1, 0, 0, TRUE);
+  moveControl(IDC_RESTRICTIONS, adjustment, adjustment1, 0, 0, TRUE);
+  adjustment = -201;
+  moveControl(IDOK, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDCANCEL, 0, adjustment, 0, 0, TRUE);
 
   return FALSE;
 }

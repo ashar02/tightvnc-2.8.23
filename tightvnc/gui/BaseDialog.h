@@ -72,6 +72,7 @@ public:
   bool setForeground();
 
   HWND getWindow();
+  void moveDialog(int X, int Y, int nWidth, int nHeight, BOOL bRepaint);
   void moveControl(int nIDDlgItem, int X, int Y, int nWidth, int nHeight, BOOL bRepaint);
 
 protected:
