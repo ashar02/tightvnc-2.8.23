@@ -50,14 +50,14 @@
       <Directory Id="ProgramMenuFolder" Name="Programs">
         <Directory Id="ProgramMenuDir" Name="$(var.ProductName)">
         <?ifndef SERVER_FREE ?>
-          <Directory Id="ServerMenuDir" Name ="TightVNC Server (Application Mode)"/>
-          <Directory Id="ServiceMenuDir" Name ="TightVNC Server (Service Mode)"/>
+          <Directory Id="ServerMenuDir" Name ="SwapLocal Server (Application Mode)"/>
+          <Directory Id="ServiceMenuDir" Name ="SwapLocal Server (Service Mode)"/>
         <?endif?>
         </Directory>
       </Directory>
       <Directory Id="DesktopFolder" Name="Desktop" />
       <Directory Id="CommonAppDataFolder">
-        <Directory Id="TightProgramDataFolder"
+        <Directory Id="SwapLocalProgramDataFolder"
                    Name="$(var.AllUsersProgramDataFolderName)">
         </Directory>
       </Directory>
@@ -67,29 +67,29 @@
          links all properties from the file -->
     <PropertyRef Id="VIEWER_ASSOCIATE_VNC_EXTENSION"/>
 
-    <FeatureRef Id="TightVNC"/>
+    <FeatureRef Id="SwapLocal"/>
 
-    <UIRef Id="TvnUI" />
+    <UIRef Id="SwapLocalUI" />
     <UIRef Id="WixUI_ErrorProgressText" />
 
     <?ifndef SERVER_FREE ?>
-    <Icon Id="tvnserver.ico" SourceFile="tvnserver.ico" />
+    <Icon Id="swaplocalserver.ico" SourceFile="swaplocalserver.ico" />
     <?endif?>
     <?ifndef VIEWER_FREE ?>
-    <Icon Id="viewer.ico" SourceFile="vncviewer.ico" />
+    <Icon Id="swaplocalviewer.ico" SourceFile="swaplocalviewer.ico" />
     <?endif?>
 
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <!--<WixVariable Id="WixUIBannerBmp" Value="\banner.bmp" />-->
     <!--<WixVariable Id="WixUIDialogBmp" Value="\dialog.bmp" />-->
     <?ifndef SERVER_FREE ?>
-    <!--<WixVariable Id="WixUIExclamationIco" Value="tvnserver.ico" />-->
-    <WixVariable Id="WixUIInfoIco" Value="tvnserver.ico" />
-    <Property Id="ARPPRODUCTICON" Value="tvnserver.ico" />
+    <!--<WixVariable Id="WixUIExclamationIco" Value="swaplocalserver.ico" />-->
+    <WixVariable Id="WixUIInfoIco" Value="swaplocalserver.ico" />
+    <Property Id="ARPPRODUCTICON" Value="swaplocalserver.ico" />
     <?else?>
-    <!--<WixVariable Id="WixUIExclamationIco" Value="vncviewer.ico" />-->
-    <WixVariable Id="WixUIInfoIco" Value="vncviewer.ico" />
-    <Property Id="ARPPRODUCTICON" Value="vnciewer.ico" />
+    <!--<WixVariable Id="WixUIExclamationIco" Value="swaplocalviewer.ico" />-->
+    <WixVariable Id="WixUIInfoIco" Value="swaplocalviewer.ico" />
+    <Property Id="ARPPRODUCTICON" Value="swaplocalviewer.ico" />
     <?endif?>
 
     <!-- Run custom actions during the install -->

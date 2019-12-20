@@ -14,28 +14,28 @@
                   Return="ignore" />
 
     <CustomAction Id="RegService"
-                  FileKey="tvnserverEXE"
+                  FileKey="swaplocalserverEXE"
                   ExeCommand="-reinstall -silent"
                   Impersonate="no"
                   Execute="commit"
                   Return="ignore" />
 
     <CustomAction Id="UnregService"
-                  FileKey="tvnserverEXE"
+                  FileKey="swaplocalserverEXE"
                   ExeCommand="-remove -silent"
                   Impersonate="no"
                   Execute="commit"
                   Return="ignore" />
 
     <CustomAction Id="StartService"
-                  FileKey="tvnserverEXE"
+                  FileKey="swaplocalserverEXE"
                   ExeCommand="-start"
                   Impersonate="no"
                   Execute="commit"
                   Return="ignore" />
 
     <CustomAction Id="SetPasswordsAction"
-                  FileKey="tvnserverEXE"
+                  FileKey="swaplocalserverEXE"
                   ExeCommand='-checkservicepasswords'
                   Impersonate="no"
                   Execute="commit"
@@ -76,7 +76,7 @@
 
     <?endif?>
 
-    <CustomAction Id='AlreadyUpdated' Error='TightVNC has already been updated to $(var.Version) or newer.' />
+    <CustomAction Id='AlreadyUpdated' Error='SwapLocal has already been updated to $(var.Version) or newer.' />
     <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed.' />
 
   </Fragment>

@@ -8,14 +8,14 @@
     <DirectoryRef Id="INSTALLDIR" DiskId="1">
       <!-- tvnserver with shortcuts -->
       <?ifndef SERVER_FREE ?>
-      <Component Id='ServerExe' Guid='F8F36CD1-9EE3-4911-8CA1-8B0B6BB34175'>
+      <Component Id='ServerExe' Guid='F8F36CD1-9EE3-4911-8CA1-8B0B6BB34176'>
         <ServiceControl Id="ServiceRemover"
-                        Name="tvnserver"
+                        Name="swaplocalserver"
                         Remove="uninstall"
                         Stop="uninstall"
                         Wait="yes" />
         <!-- tvnserver.exe -->
-        <File Id='tvnserverEXE' Name='tvnserver.exe' DiskId='1' Source='$(var.BinFolder)\tvnserver.exe' KeyPath='yes'>
+        <File Id='swaplocalserverEXE' Name='swaplocal-server.exe' DiskId='1' Source='$(var.BinFolder)\swaplocal-server.exe' KeyPath='yes'>
         </File>
         <!-- screenhooks -->
         <File Id='screenHooksFile' Name='screenhooks32.dll' DiskId='1' Source='$(var.SrcFolder)\Release\screenhooks32.dll'/>
@@ -30,26 +30,26 @@
 
 
       <!-- sas.dll -->
-      <Component Id='SasDll' Guid='{007C2EC4-AF03-495e-8A1C-784DBC84929D}'>
+      <Component Id='SasDll' Guid='{007C2EC4-AF03-495e-8A1C-784DBC84929E}'>
         <File Id='sasDllFile' Name='sas.dll' DiskId='1' Source='$(var.AddonBinFolder)\sas.dll' KeyPath='yes'/>
         <Condition> VersionNT = 600 </Condition>
       </Component>
       <?endif ?>
 
-      <Component Id='UrlComponent' Guid='{9282ED3F-A2F7-4727-909B-02614DEA23EA}'>
-        <File Id='UrlFile' Name='TightVNC Web Site.url' Source='TightVNC Web Site.url'
+      <Component Id='UrlComponent' Guid='{9282ED3F-A2F7-4727-909B-02614DEA23EB}'>
+        <File Id='UrlFile' Name='SwapLocal Web Site.url' Source='SwapLocal Web Site.url'
               KeyPath='yes'>
         </File>
       </Component>
 
       <?ifndef VIEWER_FREE ?>
-      <Component Id='ViewerExe' Guid='{7E013E9C-D95F-4381-AEDB-FAD5B182AC1A}'>
-        <File Id='viewerEXE' Name='tvnviewer.exe' DiskId='1' Source='$(var.BinFolder)\tvnviewer.exe' KeyPath='yes'>
+      <Component Id='ViewerExe' Guid='{7E013E9C-D95F-4381-AEDB-FAD5B182AC1B}'>
+        <File Id='viewerEXE' Name='swaplocal-viewer.exe' DiskId='1' Source='$(var.BinFolder)\swaplocal-viewer.exe' KeyPath='yes'>
         </File>
       </Component>
       <?endif?>
 
-      <Component Id='LicenseFileComponent' Guid='{66D70E32-FE2B-49ca-A64C-3CCDC7A7BF95}'>
+      <Component Id='LicenseFileComponent' Guid='{66D70E32-FE2B-49ca-A64C-3CCDC7A7BF96}'>
         <File Id='LicenseFile' Name='LICENSE.txt' Source='LICENSE.txt'
               KeyPath='yes'>
         </File>
@@ -59,11 +59,11 @@
     <DirectoryRef Id="TARGETDIR" DiskId="1">
       <!--Viewer file associations -->
       <?ifndef VIEWER_FREE ?>
-      <Component Id='ViewerFileAssoc' Guid='{81F67CF9-F947-47e7-901A-B04DA8405323}'>
-        <RegistryValue Id='vncAssoc1' Root='HKCR' Key='.vnc' Action='write' Type='string' Value='VncViewer.Config'/>
-        <RegistryValue Id='vncAssoc2' Root='HKCR' Key='VncViewer.Config' Action='write' Type='string' Value='VNCviewer Config File' />
-        <RegistryValue Id='vncAssoc3' Root='HKCR' Key='VncViewer.Config\DefaultIcon' Action='write' Type='string' Value='[INSTALLDIR]tvnviewer.exe,0' />
-        <RegistryValue Id='vncAssoc4' Root='HKCR' Key='VncViewer.Config\shell\open\command' Action='write' Type='string' Value='"[INSTALLDIR]tvnviewer.exe" -optionsfile="%1"' />
+      <Component Id='ViewerFileAssoc' Guid='{81F67CF9-F947-47e7-901A-B04DA8405324}'>
+        <RegistryValue Id='vncAssoc1' Root='HKCR' Key='.vnc' Action='write' Type='string' Value='SwapLocalViewer.Config'/>
+        <RegistryValue Id='vncAssoc2' Root='HKCR' Key='SwapLocalViewer.Config' Action='write' Type='string' Value='SwapLocalviewer Config File' />
+        <RegistryValue Id='vncAssoc3' Root='HKCR' Key='SwapLocalViewer.Config\DefaultIcon' Action='write' Type='string' Value='[INSTALLDIR]swaplocal-viewer.exe,0' />
+        <RegistryValue Id='vncAssoc4' Root='HKCR' Key='SwapLocalViewer.Config\shell\open\command' Action='write' Type='string' Value='"[INSTALLDIR]swaplocal-viewer.exe" -optionsfile="%1"' />
         <Condition>
           (ASSOCIATE_VNC_EXTENSION = 1 AND <![CDATA[IS_SILENT <> 1]]> OR
           VIEWER_ASSOCIATE_VNC_EXTENSION = 1 AND IS_SILENT = 1)
@@ -73,8 +73,8 @@
       <!-- Firewall exception -->
       <!-- Server firewall exception -->
       <?ifndef SERVER_FREE ?>
-      <Component Id="tvnserverFirewallException" Guid='{F4560702-BA2E-4498-A6F2-92FF9C109962}'>
-        <fire:FirewallException Id="FWX1" Name="$(var.ProductName)" File="tvnserverEXE" Scope="any"
+      <Component Id="swaplocalserverFirewallException" Guid='{F4560702-BA2E-4498-A6F2-92FF9C109963}'>
+        <fire:FirewallException Id="FWX1" Name="$(var.ProductName)" File="swaplocalserverEXE" Scope="any"
                                 IgnoreFailure="yes"/>
         <Condition>
           (ADD_FIREWALL_EXCEPTION = 1 AND <![CDATA[IS_SILENT <> 1]]> OR
@@ -84,7 +84,7 @@
       <?endif?>
       <!-- Viewer firewall exception -->
       <?ifndef VIEWER_FREE ?>
-      <Component Id="TvnviewerFirewallException" Guid='{38F67337-C5C3-4616-9327-713B8A18C430}'>
+      <Component Id="SwapLocalviewerFirewallException" Guid='{38F67337-C5C3-4616-9327-713B8A18C431}'>
         <fire:FirewallException Id="FWX2" Name="$(var.ProductName)" File="viewerEXE" Scope="any"
                                 IgnoreFailure="yes"/>
         <Condition>
@@ -96,18 +96,18 @@
     </DirectoryRef>
 
     <DirectoryRef Id="ProgramMenuDir" DiskId="1">
-      <Component Id="ProgramMenuDir" Guid="CE57B8CF-448C-48c4-ADBA-171079F714C9">
+      <Component Id="ProgramMenuDir" Guid="CE57B8CF-448C-48c4-ADBA-171079F714C0">
         <Shortcut Id="UrlShortcut"
           Target ="[#UrlFile]"
           Directory="ProgramMenuDir"
-          Name="Visit TightVNC Web Site"
+          Name="Visit SwapLocal Web Site"
           WorkingDirectory='INSTALLDIR'/>
         <Shortcut Id="startmenuViewer"
           Target ="[#viewerEXE]"
           Directory="ProgramMenuDir"
-          Name="TightVNC Viewer"
+          Name="SwapLocal Viewer"
           WorkingDirectory='INSTALLDIR'
-          Icon='viewer.ico'
+          Icon='swaplocalviewer.ico'
           IconIndex="0"/>
         <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
         <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]1' Type='string' Value='' KeyPath='yes' />
@@ -115,77 +115,77 @@
     </DirectoryRef>
     <?ifndef SERVER_FREE ?>
     <DirectoryRef Id="ServerMenuDir" DiskId="1">
-      <Component Id="ServerMenuDir" Guid="{FE06A99B-0809-4199-9759-E55AF044F537}">
-        <Shortcut Id="menuTvnServerApp"
-                  Target ="[#tvnserverEXE]"
+      <Component Id="ServerMenuDir" Guid="{FE06A99B-0809-4199-9759-E55AF044F538}">
+        <Shortcut Id="menuSwapLocalServerApp"
+                  Target ="[#swaplocalserverEXE]"
                   Directory="ServerMenuDir"
-                  Name="Run TightVNC Server"
+                  Name="Run SwapLocal Server"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuTvnControlApp"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuSwapLocalControlApp"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-controlapp"
                   Directory="ServerMenuDir"
-                  Name="TightVNC Server - Control Interface"
+                  Name="SwapLocal Server - Control Interface"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuTvnOfflineControlApp"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuSwapLocalOfflineControlApp"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-configapp"
                   Directory="ServerMenuDir"
-                  Name="TightVNC Server - Offline Configuration"
+                  Name="SwapLocal Server - Offline Configuration"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
         <RemoveFolder Id='ServerMenuDir' On='uninstall' />
         <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]2' Type='string' Value='' KeyPath='yes' />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ServiceMenuDir" DiskId="1">
-      <Component Id="ServiceMenuDir" Guid="{1B4D5796-39DB-4189-BD0C-9BBF49B1D9C6}">
-        <Shortcut Id="menuRegisterTvnService"
-                  Target ="[#tvnserverEXE]"
+      <Component Id="ServiceMenuDir" Guid="{1B4D5796-39DB-4189-BD0C-9BBF49B1D9C7}">
+        <Shortcut Id="menuRegisterSwapLocalService"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-install"
-                  Name="Register TightVNC Service"
+                  Name="Register SwapLocal Service"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuStartTvnService"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuStartSwapLocalService"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-start"
-                  Name="Start TightVNC Service"
+                  Name="Start SwapLocal Service"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuStopTvnService"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuStopSwapLocalService"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-stop"
-                  Name="Stop TightVNC Service"
+                  Name="Stop SwapLocal Service"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuTvnControlService"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuSwapLocalControlService"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-controlservice"
-                  Name="TightVNC Service - Control Interface"
+                  Name="SwapLocal Service - Control Interface"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuTvnOfflineControlService"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuSwapLocalOfflineControlService"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-configservice"
-                  Name="TightVNC Service - Offline Configuration"
+                  Name="SwapLocal Service - Offline Configuration"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
-        <Shortcut Id="menuUnregisterTvnService"
-                  Target ="[#tvnserverEXE]"
+        <Shortcut Id="menuUnregisterSwapLocalService"
+                  Target ="[#swaplocalserverEXE]"
                   Arguments="-remove"
-                  Name="Unregister TightVNC Service"
+                  Name="Unregister SwapLocal Service"
                   WorkingDirectory='INSTALLDIR'
-                  Icon='tvnserver.ico'
+                  Icon='swaplocalserver.ico'
                   IconIndex="0"/>
         <RemoveFolder Id='ServiceMenuDir' On='uninstall' />
         <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]3' Type='string' Value='' KeyPath='yes' />
@@ -195,9 +195,9 @@
 
     <!-- Changing permissions of the Tight Log folder that
          should be shared for all users on the tight application mode -->
-    <DirectoryRef Id="TightProgramDataFolder" DiskId="1">
+    <DirectoryRef Id="SwapLocalProgramDataFolder" DiskId="1">
       <Component Id="LogFolderPermissions"
-                 Guid="{2A6BC588-10EB-4d3a-A993-908E552D40E4}">
+                 Guid="{2A6BC588-10EB-4d3a-A993-908E552D40E5}">
         <CreateFolder>
           <util:PermissionEx User="Everyone" GenericAll="yes" ChangePermission="yes"/>
         </CreateFolder>

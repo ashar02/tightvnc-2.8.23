@@ -3,7 +3,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.0</ProductVersion>
-    <ProjectGuid>{a5518fbc-b2a9-4355-bb59-579446516140}</ProjectGuid>
+    <ProjectGuid>{a5518fbc-b2a9-4355-bb59-579446516141}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>setup</OutputName>
     <OutputType>Package</OutputType>

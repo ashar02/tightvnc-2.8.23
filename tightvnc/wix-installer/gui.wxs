@@ -5,7 +5,7 @@
 
   <Fragment>
     <!-- UI behaviour -->
-    <UI Id="TvnUI">
+    <UI Id="SwapLocalUI">
       <UIRef Id="WixUI_Mondo" />
       <UIRef Id="WixUI_ErrorProgressText" />
 
