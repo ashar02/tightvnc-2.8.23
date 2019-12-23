@@ -12,10 +12,10 @@
       <DialogRef Id="AdditionalTasks" />
 
       <!-- Skip the License Agreement dialog if it's needed. -->
-      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="SetupTypeDlg" Order="9">
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="9">
         $(var.NoLicense) = 1
       </Publish>
-      <Publish Dialog="SetupTypeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="9">
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="9">
         $(var.NoLicense) = 1
       </Publish>
 
@@ -46,7 +46,7 @@
         1
       </Publish>
 
-      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="AdditionalTasks" Order="10">
+      <!-- <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="AdditionalTasks" Order="10">
         (WixUI_InstallMode = "InstallTypical" OR WixUI_InstallMode = "InstallComplete" OR
         WixUI_InstallMode = "InstallCustom" OR WixUI_InstallMode = "Change") AND
         <?ifndef VIEWER_FREE ?>
@@ -58,7 +58,7 @@
         <?else?>
         (<![CDATA[&Server=3]]>)
         <?endif?>
-      </Publish>
+      </Publish> -->
     </UI>
   </Fragment>
 </Wix>

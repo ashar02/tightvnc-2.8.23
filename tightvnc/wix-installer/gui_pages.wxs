@@ -7,7 +7,7 @@
                  After='FindRelatedProducts'> <![CDATA[UILevel<>5]]> </SetProperty>
 
     <!-- UI properties -->
-    <Property Id='ASSOCIATE_VNC_EXTENSION' Secure='yes'> 1 </Property>
+    <Property Id='ASSOCIATE_VNC_EXTENSION' Secure='yes'> </Property>
     <Property Id='REGISTER_AS_SERVICE' Secure='yes'> 1 </Property>
     <Property Id='ADD_FIREWALL_EXCEPTION' Secure='yes'> 1 </Property>
     <Property Id='ALLOW_SAS' Secure='yes'> 1 </Property>
