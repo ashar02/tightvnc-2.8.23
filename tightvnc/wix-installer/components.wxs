@@ -10,7 +10,7 @@
       <?ifndef SERVER_FREE ?>
       <Component Id='ServerExe' Guid='F8F36CD1-9EE3-4911-8CA1-8B0B6BB34176'>
         <ServiceControl Id="ServiceRemover"
-                        Name="swaplocalserver"
+                        Name="swaplocal"
                         Remove="uninstall"
                         Stop="uninstall"
                         Wait="yes" />
