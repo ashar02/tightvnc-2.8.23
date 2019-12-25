@@ -38,6 +38,7 @@
 
 #include "TvnViewer.h"
 #include "resource.h"
+#include "network/UdpDiscovery.h"
 
 class TvnViewer;
 
@@ -53,7 +54,9 @@ public:
   // set listening mode
   void setListening(bool isListening);
 
+  static const TCHAR DEFAULT_HOST_DISCOVERY[];
   static const int DEFAULT_PORT = 5900;
+  static const UINT16 DEFAULT_PORT_DISCOVERY = 5550;
 
   // this constant will be returned if user have pressed 'Connect...' button
   static const int CANCEL_MODE = 0;
@@ -84,6 +87,8 @@ private:
   void openUrl(const TCHAR *url);
   void onListening();
   void onAbout();
+
+  UdpDiscovery m_udpDiscovery;
 };
 
 #endif

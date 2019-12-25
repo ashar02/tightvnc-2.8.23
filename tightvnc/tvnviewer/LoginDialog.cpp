@@ -28,10 +28,13 @@
 
 #include "win-system/Shell.h"
 
+const TCHAR LoginDialog::DEFAULT_HOST_DISCOVERY[] = _T("0.0.0.0");
+
 LoginDialog::LoginDialog(TvnViewer *viewer)
 : BaseDialog(IDD_LOGINDIALOG),
   m_viewer(viewer),
-  m_isListening(false)
+  m_isListening(false),
+  m_udpDiscovery(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY, true, MODE_CLIENT)
 {
 }
 

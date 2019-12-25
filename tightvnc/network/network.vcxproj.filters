@@ -28,6 +28,10 @@
     <ClInclude Include="RfbOutputGate.h" />
     <ClInclude Include="TcpClientThread.h" />
     <ClInclude Include="TcpServer.h" />
+    <ClInclude Include="socket\SocketUdpv4.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="UdpDiscovery.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="socket\SocketAddressIPv4.cpp">
@@ -49,5 +53,9 @@
     <ClCompile Include="RfbOutputGate.cpp" />
     <ClCompile Include="TcpClientThread.cpp" />
     <ClCompile Include="TcpServer.cpp" />
+    <ClCompile Include="socket\SocketUdpv4.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="UdpDiscovery.cpp" />
   </ItemGroup>
 </Project>
