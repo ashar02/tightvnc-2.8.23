@@ -27,6 +27,7 @@
 #include "OptionsDialog.h"
 
 #include "win-system/Shell.h"
+#include "atlstr.h"
 
 const TCHAR LoginDialog::DEFAULT_HOST_DISCOVERY[] = _T("0.0.0.0");
 
@@ -34,7 +35,8 @@ LoginDialog::LoginDialog(TvnViewer *viewer)
 : BaseDialog(IDD_LOGINDIALOG),
   m_viewer(viewer),
   m_isListening(false),
-  m_udpDiscovery(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY, true, MODE_CLIENT)
+  m_udpDiscoveryClient(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_CLIENT, DEFAULT_PORT_DISCOVERY_SERVER, true, MODE_CLIENT, 0),
+  m_udpDiscoveryServer(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_SERVER, DEFAULT_PORT_DISCOVERY_CLIENT, true, MODE_SERVER, 5900)
 {
 }
 
@@ -74,15 +76,24 @@ void LoginDialog::enableConnect()
 
 void LoginDialog::updateHistory()
 {
+	USES_CONVERSION;
   ConnectionHistory *conHistory;
 
   StringStorage currentServer;
   m_server.getText(&currentServer);
   m_server.removeAllItems();
-  conHistory = ViewerConfig::getInstance()->getConnectionHistory();
-  conHistory->load();
-  for (size_t i = 0; i < conHistory->getHostCount(); i++) {
-    m_server.insertItem(static_cast<int>(i), conHistory->getHost(i));
+  //conHistory = ViewerConfig::getInstance()->getConnectionHistory();
+  //conHistory->load();
+  //for (size_t i = 0; i < conHistory->getHostCount(); i++) {
+  //  m_server.insertItem(static_cast<int>(i), conHistory->getHost(i));
+  //}
+  map<string, SingleDiscovery> discoveryMap = m_udpDiscoveryClient.getDiscovery();
+  int index = 0;
+  for (map<string, SingleDiscovery>::iterator iterator = discoveryMap.begin(); iterator != discoveryMap.end(); iterator++)
+  {
+	SingleDiscovery singleDiscovery = iterator->second;
+	m_server.insertItem(static_cast<int>(index), A2T(singleDiscovery.address));
+	index++;
   }
   m_server.setText(currentServer.getString());
   if (m_server.getItemsCount()) {

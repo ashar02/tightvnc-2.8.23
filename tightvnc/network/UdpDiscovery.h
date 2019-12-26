@@ -31,24 +31,43 @@
 
 #define MODE_SERVER 0
 #define MODE_CLIENT 1
+#define NAME_MAX_LENGTH 300
+#define ADDRESS_MAX_LENGTH 30
+
+struct SingleDiscovery {
+	char name[NAME_MAX_LENGTH];
+	char address[ADDRESS_MAX_LENGTH];
+	time_t timestamp;
+};
 
 class UdpDiscovery : private Thread
 {
 public:
-	UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, bool autoStart, int mode) throw(Exception);
+	UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, bool autoStart, int mode, unsigned short sharePort) throw(Exception);
 	virtual ~UdpDiscovery();
 	const TCHAR *getBindHost() const;
 	unsigned short getBindPort() const;
+	map<string, SingleDiscovery> getDiscovery();
 
 protected:
 	virtual void start();
 	virtual void execute();
 
 private:
+	void processMsg(char *buffer, int size, char *fromHost = NULL, unsigned int fromPort = 0);
+	char* getValueFromMsg(char *key, char *buffer, int size);
+	void sendMsg(int type);
+	void sendMyInfo(char *ip, char *broadcast, unsigned short sharePort);
+	void sendQueryInfo(char *ip, char *broadcast);
+
 	SocketUdpv4 m_socket;
 	StringStorage m_bindHost;
 	unsigned short m_bindPort;
+	unsigned short m_otherPort;
+	unsigned short m_sharePort;
 	int m_mode;
+	map<string, SingleDiscovery> m_discoveryMap;
+	LocalMutex m_mutex;
 };
 
 #endif

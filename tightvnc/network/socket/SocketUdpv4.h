@@ -46,7 +46,7 @@ public:
   void bind(const TCHAR *bindHost, unsigned int bindPort);
   void bind(const SocketAddressIPv4 &addr) throw(SocketException);
   int sendTo(const TCHAR *toHost, unsigned int toPort, const char *data, int size, int flags = 0);
-  int recvFrom(char *buffer, int size, int flags = 0);
+  int recvFrom(char *buffer, int size, int flags = 0, char *fromHost = NULL, unsigned int *fromPort = NULL);
   int available();
   bool getLocalAddr(SocketAddressIPv4 *addr);
   void setSocketOptions(int level, int name, void *value, socklen_t len) throw(SocketException);

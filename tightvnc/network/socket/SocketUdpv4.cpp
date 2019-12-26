@@ -31,7 +31,7 @@
 
 #include <crtdbg.h>
 
-SocketUdpv4::SocketUdpv4() : m_localAddr(NULL), m_wsaStartup(1, 2)//, m_peerAddr(NULL), m_isBound(false)
+SocketUdpv4::SocketUdpv4() : m_localAddr(NULL), m_wsaStartup(1, 2)
 {
   m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (m_socket == INVALID_SOCKET) {
@@ -41,11 +41,13 @@ SocketUdpv4::SocketUdpv4() : m_localAddr(NULL), m_wsaStartup(1, 2)//, m_peerAddr
 
 SocketUdpv4::~SocketUdpv4()
 {
+  if (m_socket) {
 #ifdef _WIN32
   ::closesocket(m_socket);
 #else
   ::close(m_socket);
 #endif
+  }
   AutoLock l(&m_mutex);
   if (m_localAddr) {
     delete m_localAddr;
@@ -64,11 +66,13 @@ int SocketUdpv4::available()
 
 void SocketUdpv4::close()
 {
+  if (m_socket) {
 #ifdef _WIN32
-  ::closesocket(m_socket);
+    ::closesocket(m_socket);
 #else
-  ::close(m_socket);
+	::close(m_socket);
 #endif
+  }
   m_socket = -1;
 }
 
@@ -116,13 +120,22 @@ int SocketUdpv4::sendTo(const TCHAR *toHost, unsigned int toPort, const char *da
   return result;
 }
 
-int SocketUdpv4::recvFrom(char *buffer, int size, int flags)
+int SocketUdpv4::recvFrom(char *buffer, int size, int flags, char *fromHost, unsigned int *fromPort)
 {
   int result;
   struct sockaddr_in fromAddr;
   memset(&fromAddr, 0, sizeof(fromAddr));
   int len = sizeof(fromAddr);
   result = recvfrom(m_socket, buffer, size, flags, (sockaddr *)&fromAddr, &len);
+  if (result && (fromHost || fromPort)) {
+	  struct sockaddr_in *sin = (struct sockaddr_in *)&fromAddr;
+	  if (fromHost) {
+		  strcpy(fromHost, inet_ntoa(sin->sin_addr));
+	  }
+	  if (fromPort) {
+		  (*fromPort) = htons(sin->sin_port);
+	  }
+  }
   return result;
 }
 
