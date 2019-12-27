@@ -29,15 +29,16 @@
 #include "win-system/Shell.h"
 #include "atlstr.h"
 
-const TCHAR LoginDialog::DEFAULT_HOST_DISCOVERY[] = _T("0.0.0.0");
-
 LoginDialog::LoginDialog(TvnViewer *viewer)
 : BaseDialog(IDD_LOGINDIALOG),
   m_viewer(viewer),
   m_isListening(false),
-  m_udpDiscoveryClient(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_CLIENT, DEFAULT_PORT_DISCOVERY_SERVER, true, MODE_CLIENT, 0),
-  m_udpDiscoveryServer(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_SERVER, DEFAULT_PORT_DISCOVERY_CLIENT, true, MODE_SERVER, 5900)
+  m_udpDiscoveryClient(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_CLIENT, DEFAULT_PORT_DISCOVERY_SERVER, MODE_CLIENT)//,
+  //m_udpDiscoveryServer(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_SERVER, DEFAULT_PORT_DISCOVERY_CLIENT, MODE_SERVER)
 {
+	m_udpDiscoveryClient.start();
+	//m_udpDiscoveryServer.setSharePort(DEFAULT_PORT);
+	//m_udpDiscoveryServer.start();
 }
 
 LoginDialog::~LoginDialog()
@@ -77,16 +78,10 @@ void LoginDialog::enableConnect()
 void LoginDialog::updateHistory()
 {
   USES_CONVERSION;
-  //ConnectionHistory *conHistory;
 
   StringStorage currentServer;
   m_server.getText(&currentServer);
   m_server.removeAllItems();
-  //conHistory = ViewerConfig::getInstance()->getConnectionHistory();
-  //conHistory->load();
-  //for (size_t i = 0; i < conHistory->getHostCount(); i++) {
-  //  m_server.insertItem(static_cast<int>(i), conHistory->getHost(i));
-  //}
   map<string, SingleDiscovery> discoveryMap = m_udpDiscoveryClient.getDiscovery();
   int index = 0;
   for (map<string, SingleDiscovery>::iterator iterator = discoveryMap.begin(); iterator != discoveryMap.end(); iterator++)
@@ -104,17 +99,18 @@ void LoginDialog::updateHistory()
     }
 	StringStorage server;
 	int selectedItemIndex = m_server.getSelectedItemIndex();
-	m_server.getItemText(selectedItemIndex, &server);
-	const TCHAR *item = server.getString();
-	if (item) {
-		const TCHAR *subStr = wcsstr(item, _T(" -- "));
-		if (subStr) {
-			subStr += 4;
-			m_server.setText(subStr, selectedItemIndex);
-			server = subStr;
+	if (selectedItemIndex >= 0) {
+		m_server.getItemText(selectedItemIndex, &server);
+		const TCHAR *item = server.getString();
+		if (item) {
+			const TCHAR *subStr = _tcsstr(item, _T(" -- "));
+			if (subStr) {
+				subStr += 4;
+				m_server.setText(subStr, selectedItemIndex);
+				server = subStr;
+			}
 		}
 	}
-    //m_server.getText(&server);
     ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH,
                             server.getString());
     m_connectionConfig.loadFromStorage(&ccsm);
@@ -229,7 +225,7 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
         m_server.getItemText(selectedItemIndex, &server);
 		const TCHAR *item = server.getString();
 		if (item) {
-			const TCHAR *subStr = wcsstr(item, _T(" -- "));
+			const TCHAR *subStr = _tcsstr(item, _T(" -- "));
 			if (subStr) {
 				subStr += 4;
 				m_server.setText(subStr, selectedItemIndex);

@@ -37,15 +37,12 @@
 #define MSG_TYPE_REMOVE_INFO 2
 #define MSG_RESEND_COUNT 2
 
-UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, bool autoStart, int mode, unsigned short sharePort) : m_bindHost(bindHost), m_bindPort(bindPort), m_otherPort(otherPort), m_mode(mode), m_sharePort(sharePort), m_lastTimestamp(0)
+UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, int mode) : m_bindHost(bindHost), m_bindPort(bindPort), m_otherPort(otherPort), m_mode(mode), m_sharePort(0), m_lastTimestamp(0)
 {
 	SocketAddressIPv4 bindAddr = SocketAddressIPv4::resolve(bindHost, bindPort);
 	BOOL broadcast = 1;
 	m_socket.setSocketOptions(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
 	m_socket.bind(bindAddr);
-	if (autoStart) {
-		start();
-	}
 }
 
 UdpDiscovery::~UdpDiscovery()
@@ -58,6 +55,10 @@ UdpDiscovery::~UdpDiscovery()
 		Thread::terminate();
 		Thread::wait();
 	}
+}
+
+void UdpDiscovery::setSharePort(unsigned short sharePort) {
+	m_sharePort = sharePort;
 }
 
 const TCHAR *UdpDiscovery::getBindHost() const
@@ -219,14 +220,16 @@ void UdpDiscovery::sendMsg(int type) {
 		struct in_addr addr;
 		addr.S_un.S_addr = broadcast;
 		char* broadcastAddr = inet_ntoa(addr);
-		//if (strcmp(broadcastAddr, "255.255.255.255") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "0.0.0.0") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "127.0.0.1") == 0) {
-		//	pAdapter = pAdapter->Next;
-		//	continue;
-		//}
+		if (strcmp(broadcastAddr, "255.255.255.255") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "0.0.0.0") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "127.0.0.1") == 0) {
+			pAdapter = pAdapter->Next;
+			continue;
+		}
 		if (type == MSG_TYPE_MY_INFO) {
 			sendMyInfo(pAdapter->IpAddressList.IpAddress.String, broadcastAddr, m_sharePort);
 		} else if (type == MSG_TYPE_QUERY_INFO) {
 			sendQueryInfo(pAdapter->IpAddressList.IpAddress.String, broadcastAddr);
+		} else if (type == MSG_TYPE_REMOVE_INFO) {
+			sendRemoveInfo(pAdapter->IpAddressList.IpAddress.String, broadcastAddr, m_sharePort);
 		}
 		//TCHAR str[500];
 		//swprintf(str, _T("%S: %S %S\n"), pAdapter->IpAddressList.IpAddress.String, pAdapter->IpAddressList.IpMask.String, broadcastAddr);
@@ -273,38 +276,11 @@ void UdpDiscovery::sendQueryInfo(char *ip, char *broadcast) {
 	}
 }
 
-
-
-/*DWORD size;
-DWORD errorCode = GetAdaptersAddresses(AF_INET, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_MULTICAST | GAA_FLAG_SKIP_DNS_SERVER | GAA_FLAG_INCLUDE_PREFIX, NULL, NULL, &size);
-if (errorCode != ERROR_BUFFER_OVERFLOW) {
-return;
-}
-PIP_ADAPTER_ADDRESSES adapterAddresses = (PIP_ADAPTER_ADDRESSES) malloc(size);
-errorCode = GetAdaptersAddresses(AF_INET, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_MULTICAST | GAA_FLAG_SKIP_DNS_SERVER | GAA_FLAG_INCLUDE_PREFIX, NULL, adapterAddresses, &size);
-if (errorCode != ERROR_SUCCESS) {
-free(adapterAddresses);
-return;
-}
-for (PIP_ADAPTER_ADDRESSES adapterAddress = adapterAddresses; adapterAddress != NULL; adapterAddress = adapterAddress->Next) {
-for (PIP_ADAPTER_PREFIX_XP adapterAddressPrefixXp = adapterAddress->FirstPrefix; adapterAddressPrefixXp != NULL; adapterAddressPrefixXp = adapterAddressPrefixXp->Next) {
-char buffer[BUFSIZ] = { 0 };
-if (adapterAddressPrefixXp->Address.lpSockaddr->sa_family != AF_INET) {
-continue;
-}
-getnameinfo(adapterAddressPrefixXp->Address.lpSockaddr, adapterAddressPrefixXp->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST);
-TCHAR str[500];
-swprintf(str, _T("%lS: %S\n"), adapterAddress->FriendlyName, buffer);
-OutputDebugString(str);
-}
-}
-free(adapterAddresses);*/
-
-// 3. periodically send info from server end
+// 3. periodically send info from server end     -- done
 // 1. filter old record and display in drop down -- done
-// 2. refresh the data even drop down is open
-// 4. write code in server project as well
-// 5. test using different systems
+// 2. refresh the data even drop down is open    -- 
+// 4. write code in server project as well       -- done
+// 5. test using different systems               --
 // 6. append port beside ip from server end      -- done
 // 7. server remove info message                 -- done
-// 8. msi certificate
+// 8. msi certificate                            -- progress

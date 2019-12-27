@@ -68,7 +68,8 @@ TvnServer::TvnServer(bool runsInServiceContext,
   m_config(runsInServiceContext),
   m_log(logger),
   m_contextSwitchResolution(1),
-  m_extraRfbServers(&m_log)
+  m_extraRfbServers(&m_log),
+  m_udpDiscoveryServer(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_SERVER, DEFAULT_PORT_DISCOVERY_CLIENT, MODE_SERVER)
 {
   m_log.message(_T("%s Build on %s"),
                  ProductNames::SERVER_PRODUCT_NAME,
@@ -132,6 +133,8 @@ TvnServer::TvnServer(bool runsInServiceContext,
     restartHttpServer();
     restartControlServer();
   }
+  m_udpDiscoveryServer.setSharePort(m_srvConfig->getRfbPort());
+  m_udpDiscoveryServer.start();
 }
 
 TvnServer::~TvnServer()

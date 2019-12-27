@@ -54,10 +54,7 @@ public:
   // set listening mode
   void setListening(bool isListening);
 
-  static const TCHAR DEFAULT_HOST_DISCOVERY[];
   static const int DEFAULT_PORT = 5900;
-  static const UINT16 DEFAULT_PORT_DISCOVERY_SERVER = 5550;
-  static const UINT16 DEFAULT_PORT_DISCOVERY_CLIENT = 5551;
 
   // this constant will be returned if user have pressed 'Connect...' button
   static const int CANCEL_MODE = 0;
@@ -90,7 +87,7 @@ private:
   void onAbout();
 
   UdpDiscovery m_udpDiscoveryClient;
-  UdpDiscovery m_udpDiscoveryServer;
+  //UdpDiscovery m_udpDiscoveryServer;
 };
 
 #endif

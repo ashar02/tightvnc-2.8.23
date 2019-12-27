@@ -48,6 +48,7 @@
 
 #include "tvncontrol-app/TvnServerInfo.h"
 #include "LogInitListener.h"
+#include "network/UdpDiscovery.h"
 
 /**
  * TightVNC server singleton that includes serveral components:
@@ -208,6 +209,7 @@ protected:
   LogInitListener *m_logInitListener;
 
   UINT m_contextSwitchResolution; // in ms
+  UdpDiscovery m_udpDiscoveryServer;
 };
 
 #endif

@@ -33,6 +33,9 @@
 #define MODE_CLIENT 1
 #define NAME_MAX_LENGTH 300
 #define ADDRESS_MAX_LENGTH 30
+#define DEFAULT_PORT_DISCOVERY_SERVER 5550
+#define DEFAULT_PORT_DISCOVERY_CLIENT 5551
+#define DEFAULT_HOST_DISCOVERY _T("0.0.0.0")
 
 struct SingleDiscovery {
 	char name[NAME_MAX_LENGTH];
@@ -43,14 +46,15 @@ struct SingleDiscovery {
 class UdpDiscovery : private Thread
 {
 public:
-	UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, bool autoStart, int mode, unsigned short sharePort) throw(Exception);
+	UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, int mode) throw(Exception);
 	virtual ~UdpDiscovery();
+	void setSharePort(unsigned short sharePort);
 	const TCHAR *getBindHost() const;
 	unsigned short getBindPort() const;
 	map<string, SingleDiscovery> getDiscovery();
+	virtual void start();
 
 protected:
-	virtual void start();
 	virtual void execute();
 
 private:
