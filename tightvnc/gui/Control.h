@@ -63,6 +63,7 @@ public:
   //
 
   virtual void setText(const TCHAR *text);
+  virtual void setText(const TCHAR *text, int index);
   virtual void setSignedInt(int value);
   virtual void setUnsignedInt(unsigned int value);
 

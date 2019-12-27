@@ -58,6 +58,7 @@ private:
 	char* getValueFromMsg(char *key, char *buffer, int size);
 	void sendMsg(int type);
 	void sendMyInfo(char *ip, char *broadcast, unsigned short sharePort);
+	void sendRemoveInfo(char *ip, char *broadcast, unsigned short sharePort);
 	void sendQueryInfo(char *ip, char *broadcast);
 
 	SocketUdpv4 m_socket;
@@ -68,6 +69,7 @@ private:
 	int m_mode;
 	map<string, SingleDiscovery> m_discoveryMap;
 	LocalMutex m_mutex;
+	time_t m_lastTimestamp;
 };
 
 #endif

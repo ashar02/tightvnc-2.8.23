@@ -66,6 +66,14 @@ void Control::setText(const TCHAR *text)
   SetWindowText(m_hwnd, text);
 }
 
+void Control::setText(const TCHAR *text, int index)
+{
+  SetWindowText(m_hwnd, text);
+  SendMessage(m_hwnd, CB_DELETESTRING, index, 0L);
+  SendMessage(m_hwnd, CB_INSERTSTRING, index, (LPARAM)text);
+  SendMessage(m_hwnd, CB_SETCURSEL, index, 0L);
+}
+
 void Control::setSignedInt(int value)
 {
   StringStorage text;

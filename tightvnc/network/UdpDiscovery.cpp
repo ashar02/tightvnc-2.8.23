@@ -34,9 +34,10 @@
 #define BUFFER_MAX_LENGTH 500
 #define MSG_TYPE_QUERY_INFO 0
 #define MSG_TYPE_MY_INFO 1
+#define MSG_TYPE_REMOVE_INFO 2
 #define MSG_RESEND_COUNT 2
 
-UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, bool autoStart, int mode, unsigned short sharePort) : m_bindHost(bindHost), m_bindPort(bindPort), m_otherPort(otherPort), m_mode(mode), m_sharePort(sharePort)
+UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, bool autoStart, int mode, unsigned short sharePort) : m_bindHost(bindHost), m_bindPort(bindPort), m_otherPort(otherPort), m_mode(mode), m_sharePort(sharePort), m_lastTimestamp(0)
 {
 	SocketAddressIPv4 bindAddr = SocketAddressIPv4::resolve(bindHost, bindPort);
 	BOOL broadcast = 1;
@@ -48,7 +49,10 @@ UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsig
 }
 
 UdpDiscovery::~UdpDiscovery()
-{	
+{
+	if (m_mode == MODE_SERVER) {
+		sendMsg(MSG_TYPE_REMOVE_INFO);
+	}
 	m_socket.close();
 	if (isActive()) {
 		Thread::terminate();
@@ -99,14 +103,26 @@ void UdpDiscovery::execute()
 	while (!isTerminating()) {
 		if (m_mode == MODE_CLIENT) {
 		} else if (m_mode == MODE_SERVER) {
+			time_t currentTimestamp = time(NULL);
+			if ((currentTimestamp - m_lastTimestamp) >= 25) {
+				sendMsg(MSG_TYPE_MY_INFO);
+			}
 		}
 		while (m_socket.available()) {
 			int recvLength = m_socket.recvFrom(buffer, BUFFER_MAX_LENGTH, 0, fromHost, &fromPort);
 			if (recvLength) {
 				processMsg(buffer, recvLength, fromHost, fromPort);
 			}
+			if (m_mode == MODE_CLIENT) {
+			} else if (m_mode == MODE_SERVER) {
+				time_t currentTimestamp = time(NULL);
+				if ((currentTimestamp - m_lastTimestamp) >= 25) {
+					sendMsg(MSG_TYPE_MY_INFO);
+				}
+			}
+			Thread::sleep(10);
 		}
-		Thread::sleep(200);
+		Thread::sleep(250);
 	}
 }
 
@@ -143,6 +159,14 @@ void UdpDiscovery::processMsg(char *buffer, int size, char *fromHost, unsigned i
 					free(address);
 				}
 				free(name);
+			}
+		} else if (stricmp(type, "remove-info") == 0) {
+			char* address = getValueFromMsg("address=", buffer, size);
+			if (address) {
+				std::string addressStr(address);
+				AutoLock l(&m_mutex);
+				m_discoveryMap.erase(addressStr);
+				free(address);
 			}
 		}
 	} else if (m_mode == MODE_SERVER) {
@@ -195,10 +219,10 @@ void UdpDiscovery::sendMsg(int type) {
 		struct in_addr addr;
 		addr.S_un.S_addr = broadcast;
 		char* broadcastAddr = inet_ntoa(addr);
-		if (strcmp(broadcastAddr, "255.255.255.255") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "0.0.0.0") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "127.0.0.1") == 0) {
-			pAdapter = pAdapter->Next;
-			continue;
-		}
+		//if (strcmp(broadcastAddr, "255.255.255.255") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "0.0.0.0") == 0 || strcmp(pAdapter->IpAddressList.IpAddress.String, "127.0.0.1") == 0) {
+		//	pAdapter = pAdapter->Next;
+		//	continue;
+		//}
 		if (type == MSG_TYPE_MY_INFO) {
 			sendMyInfo(pAdapter->IpAddressList.IpAddress.String, broadcastAddr, m_sharePort);
 		} else if (type == MSG_TYPE_QUERY_INFO) {
@@ -227,6 +251,17 @@ void UdpDiscovery::sendMyInfo(char *ip, char *broadcast, unsigned short sharePor
 		sleep(5);
 		m_socket.sendTo(A2T(broadcast), m_otherPort, myInfoMsg, strlen(myInfoMsg), 0);
 	}
+	m_lastTimestamp = time(NULL);
+}
+
+void UdpDiscovery::sendRemoveInfo(char *ip, char *broadcast, unsigned short sharePort) {
+	USES_CONVERSION;
+	char removeInfoMsg[BUFFER_MAX_LENGTH] = "app=hype-local\ntype=remove-info\n";
+	sprintf(removeInfoMsg, "%saddress=%s:%d\n", removeInfoMsg, ip, sharePort);
+	for (int index = 0; index < MSG_RESEND_COUNT; index++) {
+		sleep(5);
+		m_socket.sendTo(A2T(broadcast), m_otherPort, removeInfoMsg, strlen(removeInfoMsg), 0);
+	}
 }
 
 void UdpDiscovery::sendQueryInfo(char *ip, char *broadcast) {
@@ -237,6 +272,8 @@ void UdpDiscovery::sendQueryInfo(char *ip, char *broadcast) {
 		m_socket.sendTo(A2T(broadcast), m_otherPort, queryInfoMsg, strlen(queryInfoMsg), 0);
 	}
 }
+
+
 
 /*DWORD size;
 DWORD errorCode = GetAdaptersAddresses(AF_INET, GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_MULTICAST | GAA_FLAG_SKIP_DNS_SERVER | GAA_FLAG_INCLUDE_PREFIX, NULL, NULL, &size);
@@ -264,8 +301,10 @@ OutputDebugString(str);
 free(adapterAddresses);*/
 
 // 3. periodically send info from server end
-// 1. filter old record and display in drop down
+// 1. filter old record and display in drop down -- done
 // 2. refresh the data even drop down is open
 // 4. write code in server project as well
 // 5. test using different systems
-// 6. append port beside ip from server end
+// 6. append port beside ip from server end      -- done
+// 7. server remove info message                 -- done
+// 8. msi certificate

@@ -76,8 +76,8 @@ void LoginDialog::enableConnect()
 
 void LoginDialog::updateHistory()
 {
-	USES_CONVERSION;
-  ConnectionHistory *conHistory;
+  USES_CONVERSION;
+  //ConnectionHistory *conHistory;
 
   StringStorage currentServer;
   m_server.getText(&currentServer);
@@ -92,7 +92,9 @@ void LoginDialog::updateHistory()
   for (map<string, SingleDiscovery>::iterator iterator = discoveryMap.begin(); iterator != discoveryMap.end(); iterator++)
   {
 	SingleDiscovery singleDiscovery = iterator->second;
-	m_server.insertItem(static_cast<int>(index), A2T(singleDiscovery.address));
+	char item[NAME_MAX_LENGTH + ADDRESS_MAX_LENGTH + 1] = { 0 };
+	sprintf(item, "%s -- %s", singleDiscovery.name, singleDiscovery.address);
+	m_server.insertItem(static_cast<int>(index), A2T(item));
 	index++;
   }
   m_server.setText(currentServer.getString());
@@ -100,8 +102,19 @@ void LoginDialog::updateHistory()
     if (currentServer.isEmpty()) {
       m_server.setSelectedItem(0);
     }
-    StringStorage server;
-    m_server.getText(&server);
+	StringStorage server;
+	int selectedItemIndex = m_server.getSelectedItemIndex();
+	m_server.getItemText(selectedItemIndex, &server);
+	const TCHAR *item = server.getString();
+	if (item) {
+		const TCHAR *subStr = wcsstr(item, _T(" -- "));
+		if (subStr) {
+			subStr += 4;
+			m_server.setText(subStr, selectedItemIndex);
+			server = subStr;
+		}
+	}
+    //m_server.getText(&server);
     ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH,
                             server.getString());
     m_connectionConfig.loadFromStorage(&ccsm);
@@ -214,6 +227,15 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
         }
         StringStorage server;
         m_server.getItemText(selectedItemIndex, &server);
+		const TCHAR *item = server.getString();
+		if (item) {
+			const TCHAR *subStr = wcsstr(item, _T(" -- "));
+			if (subStr) {
+				subStr += 4;
+				m_server.setText(subStr, selectedItemIndex);
+				server = subStr;
+			}
+		}
         ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH,
                                 server.getString());
         m_connectionConfig.loadFromStorage(&ccsm);
