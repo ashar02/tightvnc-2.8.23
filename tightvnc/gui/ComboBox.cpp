@@ -100,3 +100,14 @@ void ComboBox::removeAllItems()
   ComboBox_ResetContent(m_hwnd);
 }
 
+int ComboBox::getItemHeight() {
+	return ComboBox_GetItemHeight(m_hwnd);
+}
+
+void ComboBox::setItemHeight(int index, int height) {
+	ComboBox_SetItemHeight(m_hwnd, index, height);
+}
+
+bool ComboBox::getDropDownState() {
+	return ComboBox_GetDroppedState(m_hwnd);
+}

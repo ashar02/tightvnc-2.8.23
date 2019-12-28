@@ -36,6 +36,7 @@ LoginDialog::LoginDialog(TvnViewer *viewer)
   m_udpDiscoveryClient(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_CLIENT, DEFAULT_PORT_DISCOVERY_SERVER, MODE_CLIENT)//,
   //m_udpDiscoveryServer(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_SERVER, DEFAULT_PORT_DISCOVERY_CLIENT, MODE_SERVER)
 {
+	m_udpDiscoveryClient.setDiscoveryCB(this, &(LoginDialog::discoveryCB));
 	m_udpDiscoveryClient.start();
 	//m_udpDiscoveryServer.setSharePort(DEFAULT_PORT);
 	//m_udpDiscoveryServer.start();
@@ -75,6 +76,10 @@ void LoginDialog::enableConnect()
   }
 }
 
+ComboBox* LoginDialog::getServer() {
+	return &m_server;
+}
+
 void LoginDialog::updateHistory()
 {
   USES_CONVERSION;
@@ -92,6 +97,7 @@ void LoginDialog::updateHistory()
 	m_server.insertItem(static_cast<int>(index), A2T(item));
 	index++;
   }
+  m_server.setItemHeight(0, 17);
   m_server.setText(currentServer.getString());
   if (m_server.getItemsCount()) {
     if (currentServer.isEmpty()) {
@@ -283,4 +289,18 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
 StringStorage LoginDialog::getServerHost()
 {
   return m_serverHost;
+}
+
+void LoginDialog::discoveryCB(void *obj) {
+	LoginDialog *loginDialog = (LoginDialog*) obj;
+	if (!loginDialog) {
+		return;
+	}
+	ComboBox *server = loginDialog->getServer();
+	if (!server) {
+		return;
+	}
+	if (server->getDropDownState()) {
+		loginDialog->updateHistory();
+	}
 }

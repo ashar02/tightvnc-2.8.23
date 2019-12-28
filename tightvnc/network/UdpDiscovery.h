@@ -43,12 +43,15 @@ struct SingleDiscovery {
 	time_t timestamp;
 };
 
+typedef void (*DiscoveryCB)(void* obj);
+
 class UdpDiscovery : private Thread
 {
 public:
 	UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, int mode) throw(Exception);
 	virtual ~UdpDiscovery();
 	void setSharePort(unsigned short sharePort);
+	void setDiscoveryCB(void* obj, DiscoveryCB discoveryCB);
 	const TCHAR *getBindHost() const;
 	unsigned short getBindPort() const;
 	map<string, SingleDiscovery> getDiscovery();
@@ -74,6 +77,9 @@ private:
 	map<string, SingleDiscovery> m_discoveryMap;
 	LocalMutex m_mutex;
 	time_t m_lastTimestamp;
+
+	void *m_obj;
+	DiscoveryCB m_discoveryCB;
 };
 
 #endif

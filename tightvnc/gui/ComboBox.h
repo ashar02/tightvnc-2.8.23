@@ -69,6 +69,15 @@ public:
 
   // Removes all combo box items
   void removeAllItems();
+
+  // Get combo box list item height
+  int getItemHeight();
+
+  // Set combo box list item height
+  void setItemHeight(int index, int height);
+
+  // Get combo box drop down state
+  bool getDropDownState();
 };
 
 #endif

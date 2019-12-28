@@ -53,6 +53,9 @@ public:
   void setConConf(ConnectionConfig *conConf);
   // set listening mode
   void setListening(bool isListening);
+  static void discoveryCB(void *obj);
+  ComboBox* getServer();
+  void updateHistory();
 
   static const int DEFAULT_PORT = 5900;
 
@@ -77,7 +80,6 @@ protected:
 
 private:
   void enableConnect();
-  void updateHistory();
   void onConnect();
   void onConfiguration();
   BOOL onOptions();

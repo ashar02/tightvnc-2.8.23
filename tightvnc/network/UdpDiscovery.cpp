@@ -37,7 +37,7 @@
 #define MSG_TYPE_REMOVE_INFO 2
 #define MSG_RESEND_COUNT 2
 
-UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, int mode) : m_bindHost(bindHost), m_bindPort(bindPort), m_otherPort(otherPort), m_mode(mode), m_sharePort(0), m_lastTimestamp(0)
+UdpDiscovery::UdpDiscovery(const TCHAR *bindHost, unsigned short bindPort, unsigned short otherPort, int mode) : m_bindHost(bindHost), m_bindPort(bindPort), m_otherPort(otherPort), m_mode(mode), m_sharePort(0), m_lastTimestamp(0), m_obj(NULL), m_discoveryCB(NULL)
 {
 	SocketAddressIPv4 bindAddr = SocketAddressIPv4::resolve(bindHost, bindPort);
 	BOOL broadcast = 1;
@@ -58,7 +58,16 @@ UdpDiscovery::~UdpDiscovery()
 }
 
 void UdpDiscovery::setSharePort(unsigned short sharePort) {
-	m_sharePort = sharePort;
+	if (m_mode == MODE_SERVER) {
+		m_sharePort = sharePort;
+	}
+}
+
+void UdpDiscovery::setDiscoveryCB(void* obj, DiscoveryCB discoveryCB) {
+	if (m_mode == MODE_CLIENT) {
+		m_obj = obj;
+		m_discoveryCB = discoveryCB;
+	}
 }
 
 const TCHAR *UdpDiscovery::getBindHost() const
@@ -147,6 +156,7 @@ void UdpDiscovery::processMsg(char *buffer, int size, char *fromHost, unsigned i
 		if (stricmp(type, "my-info") == 0) {
 			char* name = getValueFromMsg("name=", buffer, size);
 			if (name) {
+				bool isChanged = false;
 				char* address = getValueFromMsg("address=", buffer, size);
 				if (address) {
 					std::string addressStr(address);
@@ -156,10 +166,18 @@ void UdpDiscovery::processMsg(char *buffer, int size, char *fromHost, unsigned i
 					strcpy(singleDiscovery.address, address);
 					singleDiscovery.timestamp = time(NULL);
 					AutoLock l(&m_mutex);
+					int prevCount = m_discoveryMap.size();
 					m_discoveryMap[addressStr] = singleDiscovery;
 					free(address);
+					int currCount = m_discoveryMap.size();
+					if (currCount != prevCount) {
+						isChanged = true;
+					}
 				}
 				free(name);
+				if (isChanged && m_discoveryCB && m_obj) {
+					(*m_discoveryCB)(m_obj);
+				}
 			}
 		} else if (stricmp(type, "remove-info") == 0) {
 			char* address = getValueFromMsg("address=", buffer, size);
@@ -276,11 +294,13 @@ void UdpDiscovery::sendQueryInfo(char *ip, char *broadcast) {
 	}
 }
 
-// 3. periodically send info from server end     -- done
-// 1. filter old record and display in drop down -- done
-// 2. refresh the data even drop down is open    -- 
-// 4. write code in server project as well       -- done
-// 5. test using different systems               --
-// 6. append port beside ip from server end      -- done
-// 7. server remove info message                 -- done
-// 8. msi certificate                            -- progress
+// 1.  periodically send info from server end               -- done
+// 2.  expire outdated records before display in drop down  -- done
+// 3.  refresh the data even drop down is open              -- done
+// 4.  write code in server project as well                 -- done
+// 5.  test using different systems                         -- done
+// 6.  append port beside ip from server end                -- done
+// 7.  server remove info message app on exit               -- done
+// 8.  msi certificate signing                              -- done
+// 9.  where password is stored in server end               -- progress
+// 10. adjust drowdown list item height                     -- done
