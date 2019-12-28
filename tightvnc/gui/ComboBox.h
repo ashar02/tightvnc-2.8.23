@@ -78,6 +78,9 @@ public:
 
   // Get combo box drop down state
   bool getDropDownState();
+
+  // Show or hide drop down
+  void showDropDown(bool show);
 };
 
 #endif

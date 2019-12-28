@@ -111,3 +111,7 @@ void ComboBox::setItemHeight(int index, int height) {
 bool ComboBox::getDropDownState() {
 	return ComboBox_GetDroppedState(m_hwnd);
 }
+
+void ComboBox::showDropDown(bool show) {
+	ComboBox_ShowDropdown(m_hwnd, show);
+}

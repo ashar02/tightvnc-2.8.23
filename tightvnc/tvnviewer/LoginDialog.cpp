@@ -36,10 +36,10 @@ LoginDialog::LoginDialog(TvnViewer *viewer)
   m_udpDiscoveryClient(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_CLIENT, DEFAULT_PORT_DISCOVERY_SERVER, MODE_CLIENT)//,
   //m_udpDiscoveryServer(DEFAULT_HOST_DISCOVERY, DEFAULT_PORT_DISCOVERY_SERVER, DEFAULT_PORT_DISCOVERY_CLIENT, MODE_SERVER)
 {
-	m_udpDiscoveryClient.setDiscoveryCB(this, &(LoginDialog::discoveryCB));
-	m_udpDiscoveryClient.start();
-	//m_udpDiscoveryServer.setSharePort(DEFAULT_PORT);
-	//m_udpDiscoveryServer.start();
+  m_udpDiscoveryClient.setDiscoveryCB(this, &(LoginDialog::discoveryCB));
+  m_udpDiscoveryClient.start();
+  //m_udpDiscoveryServer.setSharePort(DEFAULT_PORT);
+  //m_udpDiscoveryServer.start();
 }
 
 LoginDialog::~LoginDialog()
@@ -77,7 +77,7 @@ void LoginDialog::enableConnect()
 }
 
 ComboBox* LoginDialog::getServer() {
-	return &m_server;
+  return &m_server;
 }
 
 void LoginDialog::updateHistory()
@@ -106,16 +106,18 @@ void LoginDialog::updateHistory()
 	StringStorage server;
 	int selectedItemIndex = m_server.getSelectedItemIndex();
 	if (selectedItemIndex >= 0) {
-		m_server.getItemText(selectedItemIndex, &server);
-		const TCHAR *item = server.getString();
+	  m_server.getItemText(selectedItemIndex, &server);
+	  const TCHAR *item = server.getString();
+	  if (!server.isEmpty()) {
 		if (item) {
-			const TCHAR *subStr = _tcsstr(item, _T(" -- "));
-			if (subStr) {
-				subStr += 4;
-				m_server.setText(subStr, selectedItemIndex);
-				server = subStr;
-			}
+		  const TCHAR *subStr = _tcsstr(item, _T(" -- "));
+		  if (subStr) {
+			subStr += 4;
+			m_server.setText(subStr, selectedItemIndex);
+			server = subStr;
+		  }
 		}
+	  }
 	}
     ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH,
                             server.getString());
@@ -229,18 +231,20 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
         }
         StringStorage server;
         m_server.getItemText(selectedItemIndex, &server);
-		const TCHAR *item = server.getString();
-		if (item) {
+		if (!server.isEmpty()) {
+		  const TCHAR *item = server.getString();
+		  if (item) {
 			const TCHAR *subStr = _tcsstr(item, _T(" -- "));
 			if (subStr) {
-				subStr += 4;
-				m_server.setText(subStr, selectedItemIndex);
-				server = subStr;
+			  subStr += 4;
+			  m_server.setText(subStr, selectedItemIndex);
+			  server = subStr;
 			}
+		  }
+		  ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH,
+								 server.getString());
+		  m_connectionConfig.loadFromStorage(&ccsm);
 		}
-        ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH,
-                                server.getString());
-        m_connectionConfig.loadFromStorage(&ccsm);
         break;
       }
     }
@@ -292,15 +296,17 @@ StringStorage LoginDialog::getServerHost()
 }
 
 void LoginDialog::discoveryCB(void *obj) {
-	LoginDialog *loginDialog = (LoginDialog*) obj;
-	if (!loginDialog) {
-		return;
-	}
-	ComboBox *server = loginDialog->getServer();
-	if (!server) {
-		return;
-	}
-	if (server->getDropDownState()) {
-		loginDialog->updateHistory();
-	}
+  LoginDialog *loginDialog = (LoginDialog*) obj;
+  if (!loginDialog) {
+	return;
+  }
+  ComboBox *server = loginDialog->getServer();
+  if (!server) {
+	return;
+  }
+  if (server->getDropDownState()) {
+	server->showDropDown(false);
+	loginDialog->updateHistory();
+	server->showDropDown(true);
+  }
 }

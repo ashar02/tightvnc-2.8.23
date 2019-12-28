@@ -128,13 +128,13 @@ int SocketUdpv4::recvFrom(char *buffer, int size, int flags, char *fromHost, uns
   int len = sizeof(fromAddr);
   result = recvfrom(m_socket, buffer, size, flags, (sockaddr *)&fromAddr, &len);
   if (result && (fromHost || fromPort)) {
-	  struct sockaddr_in *sin = (struct sockaddr_in *)&fromAddr;
-	  if (fromHost) {
-		  strcpy(fromHost, inet_ntoa(sin->sin_addr));
-	  }
-	  if (fromPort) {
-		  (*fromPort) = htons(sin->sin_port);
-	  }
+	struct sockaddr_in *sin = (struct sockaddr_in *)&fromAddr;
+	if (fromHost) {
+	  strcpy(fromHost, inet_ntoa(sin->sin_addr));
+	}
+	if (fromPort) {
+	  (*fromPort) = htons(sin->sin_port);
+	}
   }
   return result;
 }
