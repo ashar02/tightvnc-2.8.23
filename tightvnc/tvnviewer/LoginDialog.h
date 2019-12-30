@@ -41,6 +41,10 @@
 #include "network/UdpDiscovery.h"
 
 class TvnViewer;
+struct Param {
+	void* obj;
+	TCHAR text[ADDRESS_MAX_LENGTH];
+};
 
 class LoginDialog : public BaseDialog
 {
@@ -77,6 +81,7 @@ protected:
   ComboBox m_server;
   StringStorage m_serverHost;
   TvnViewer *m_viewer;
+  map<string, SingleDiscovery> m_discoveryMap;
 
 private:
   void enableConnect();
@@ -87,6 +92,8 @@ private:
   void openUrl(const TCHAR *url);
   void onListening();
   void onAbout();
+  void updateServerAfterDelay(const TCHAR *text);
+  static DWORD WINAPI UpdateComboEdit(LPVOID lpParam);
 
   UdpDiscovery m_udpDiscoveryClient;
   //UdpDiscovery m_udpDiscoveryServer;

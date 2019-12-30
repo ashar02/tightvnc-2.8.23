@@ -104,14 +104,28 @@ int ComboBox::getItemHeight() {
 	return ComboBox_GetItemHeight(m_hwnd);
 }
 
+void ComboBox::setItemWidth(int width) {
+  SendMessage(m_hwnd, CB_SETDROPPEDWIDTH, (WPARAM)(width), 0L);
+}
+
 void ComboBox::setItemHeight(int index, int height) {
-	ComboBox_SetItemHeight(m_hwnd, index, height);
+  ComboBox_SetItemHeight(m_hwnd, index, height);
 }
 
 bool ComboBox::getDropDownState() {
-	return ComboBox_GetDroppedState(m_hwnd);
+  return ComboBox_GetDroppedState(m_hwnd);
 }
 
 void ComboBox::showDropDown(bool show) {
-	ComboBox_ShowDropdown(m_hwnd, show);
+  ComboBox_ShowDropdown(m_hwnd, show);
+}
+
+void ComboBox::setEditText(const TCHAR *text) {
+  POINT pt;
+  pt.x = 5;
+  pt.y = 5;
+  HWND editHWnd = ChildWindowFromPoint(m_hwnd, pt);
+  if (editHWnd) {
+    SendMessage(editHWnd, WM_SETTEXT, 0, (LPARAM)(text));
+  }
 }

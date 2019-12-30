@@ -60,7 +60,9 @@ BOOL LoginDialog::onInitDialog()
 
   int adjustment = -176;
   moveDialog(0, 0, 0, adjustment, TRUE);
-
+  m_server.setItemWidth(300);
+  m_server.setItemHeight(0, 17);
+  
   return TRUE;
 }
 
@@ -87,17 +89,23 @@ void LoginDialog::updateHistory()
   StringStorage currentServer;
   m_server.getText(&currentServer);
   m_server.removeAllItems();
-  map<string, SingleDiscovery> discoveryMap = m_udpDiscoveryClient.getDiscovery();
+  m_server.setText(currentServer.getString());
+  m_discoveryMap = m_udpDiscoveryClient.getDiscovery();
   int index = 0;
-  for (map<string, SingleDiscovery>::iterator iterator = discoveryMap.begin(); iterator != discoveryMap.end(); iterator++)
+  TCHAR str[500];
+  swprintf(str, _T("Update history count %d\n"), m_discoveryMap.size());
+  OutputDebugString(str);
+  for (map<string, SingleDiscovery>::iterator iterator = m_discoveryMap.begin(); iterator != m_discoveryMap.end(); iterator++)
   {
 	SingleDiscovery singleDiscovery = iterator->second;
 	char item[NAME_MAX_LENGTH + ADDRESS_MAX_LENGTH + 1] = { 0 };
 	sprintf(item, "%s -- %s", singleDiscovery.name, singleDiscovery.address);
-	m_server.insertItem(static_cast<int>(index), A2T(item));
+	m_server.addItem(A2T(item));
+	//TCHAR str[500];
+	//swprintf(str, _T("Update history %S\n"), item);
+	//OutputDebugString(str);
 	index++;
   }
-  m_server.setItemHeight(0, 17);
   m_server.setText(currentServer.getString());
   if (m_server.getItemsCount()) {
     if (currentServer.isEmpty()) {
@@ -113,7 +121,7 @@ void LoginDialog::updateHistory()
 		  const TCHAR *subStr = _tcsstr(item, _T(" -- "));
 		  if (subStr) {
 			subStr += 4;
-			m_server.setText(subStr, selectedItemIndex);
+			updateServerAfterDelay(subStr);
 			server = subStr;
 		  }
 		}
@@ -224,6 +232,7 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
 
     // select item in ComboBox with list of history
     case CBN_SELENDOK:
+	case CBN_SELCHANGE:
       {
         int selectedItemIndex = m_server.getSelectedItemIndex();
         if (selectedItemIndex < 0) {
@@ -237,7 +246,7 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
 			const TCHAR *subStr = _tcsstr(item, _T(" -- "));
 			if (subStr) {
 			  subStr += 4;
-			  m_server.setText(subStr, selectedItemIndex);
+			  updateServerAfterDelay(subStr);
 			  server = subStr;
 			}
 		  }
@@ -309,4 +318,37 @@ void LoginDialog::discoveryCB(void *obj) {
 	loginDialog->updateHistory();
 	server->showDropDown(true);
   }
+}
+
+void LoginDialog::updateServerAfterDelay(const TCHAR *text) {
+  struct Param *param = (struct Param*) malloc(sizeof(struct Param));
+  if (param) {
+	param->obj = this;
+	_tcscpy(param->text, text);
+	HANDLE handle = CreateThread(NULL, 0, UpdateComboEdit, param, 0, NULL);
+	if (!handle) {
+      free(param);
+	}
+  }
+}
+
+DWORD LoginDialog::UpdateComboEdit(LPVOID lpParam) {
+  struct Param *param = (struct Param*) lpParam;
+  if (!param) {
+	return 0;
+  }
+  LoginDialog *loginDialog = (LoginDialog*) param->obj;
+  if (!loginDialog) {
+	free(param);
+	return 0;
+  }
+  ComboBox *server = loginDialog->getServer();
+  if (!server) {
+	free(param);
+	return 0;
+  }
+  Thread::sleep(10);
+  server->setEditText(param->text);
+  free(param);
+  return 0;
 }

@@ -130,16 +130,13 @@ void UdpDiscovery::execute()
 		  sendMsg(MSG_TYPE_MY_INFO);
 		}
 	  }
-	  Thread::sleep(10);
+	  Thread::sleep(5);
 	}
-  Thread::sleep(250);
+  Thread::sleep(150);
   }
 }
 
 void UdpDiscovery::processMsg(char *buffer, int size, char *fromHost, unsigned int fromPort) {
-  //TCHAR str[500];
-  //swprintf(str, _T("%S%S:%d\n"), buffer, fromHost, fromPort);
-  //OutputDebugString(str);
   char* app = getValueFromMsg("app=", buffer, size);
   if (!app) {
 	return; //discard
@@ -152,6 +149,9 @@ void UdpDiscovery::processMsg(char *buffer, int size, char *fromHost, unsigned i
   if (!type) {
 	return; //discard
   }
+  //TCHAR str[500];
+  //swprintf(str, _T("%S%S:%d\n"), buffer, fromHost, fromPort);
+  //OutputDebugString(str);
   if (m_mode == MODE_CLIENT) {
 	if (stricmp(type, "my-info") == 0) {
 	  char* name = getValueFromMsg("name=", buffer, size);
@@ -258,9 +258,6 @@ void UdpDiscovery::sendMsg(int type) {
 	} else if (type == MSG_TYPE_REMOVE_INFO) {
 	  sendRemoveInfo(pAdapter->IpAddressList.IpAddress.String, broadcastAddr, m_sharePort);
 	}
-	//TCHAR str[500];
-	//swprintf(str, _T("%S: %S %S\n"), pAdapter->IpAddressList.IpAddress.String, pAdapter->IpAddressList.IpMask.String, broadcastAddr);
-	//OutputDebugString(str);
 	pAdapter = pAdapter->Next;
   }
   if (adapterInfo) {
@@ -303,13 +300,4 @@ void UdpDiscovery::sendQueryInfo(char *ip, char *broadcast) {
   }
 }
 
-// 1.  periodically send info from server end               -- done
-// 2.  expire outdated records before display in drop down  -- done
-// 3.  refresh the data even drop down is open              -- done
-// 4.  write code in server project as well                 -- done
-// 5.  test using different systems                         -- done
-// 6.  append port beside ip from server end                -- done
-// 7.  server remove info message app on exit               -- done
-// 8.  msi certificate signing                              -- done
 // 9.  where password is stored in server end               -- progress
-// 10. adjust drowdown list item height                     -- done

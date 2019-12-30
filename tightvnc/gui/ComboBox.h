@@ -73,6 +73,9 @@ public:
   // Get combo box list item height
   int getItemHeight();
 
+  // Set combo box list item width
+  void setItemWidth(int width);
+
   // Set combo box list item height
   void setItemHeight(int index, int height);
 
@@ -81,6 +84,9 @@ public:
 
   // Show or hide drop down
   void showDropDown(bool show);
+
+  // Set text in edit box
+  void setEditText(const TCHAR *text);
 };
 
 #endif
