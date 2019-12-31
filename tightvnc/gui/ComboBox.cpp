@@ -126,6 +126,7 @@ void ComboBox::setEditText(const TCHAR *text) {
   pt.y = 5;
   HWND editHWnd = ChildWindowFromPoint(m_hwnd, pt);
   if (editHWnd) {
-    SendMessage(editHWnd, WM_SETTEXT, 0, (LPARAM)(text));
+    SendMessage(editHWnd, WM_SETTEXT, (WPARAM)(0), (LPARAM)(text));
+	SendMessage(editHWnd, EM_SETSEL, (WPARAM)(0), (LPARAM)(-1));
   }
 }
