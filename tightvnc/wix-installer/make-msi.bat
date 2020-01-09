@@ -21,7 +21,7 @@ variable, VIEWER_FREE=1 defines "VIEWER_FREE" and
 set it to 1.
 
 Example:
-make-msi.bat swaplocal-1.0.2-setup-32bit swaplocal-1.0.2-setup-64bit 1 VIEWER_FREE
+make-msi.bat swaplocal-1.0.3-setup-32bit swaplocal-1.0.3-setup-64bit 1 VIEWER_FREE
 
 --------------------------------------
 
