@@ -121,6 +121,20 @@ BOOL SetPasswordsDialog::onInitDialog()
 
   updateEditControls();
 
+  int adjustment = -10;
+  moveControl(IDC_DONT_USE_RFB_AUTH_RADIO, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_USE_RFB_AUTH_RADIO, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_ENTER_RFB_PASSWORD, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_CONFIRM_RFB_PASSWORD, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_REMOTE_PASSWORD, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_REMOTE_CONFIRM, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_DONT_USE_CONTROL_PROTECTION_RADIO, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_PROTECT_CONTROL_INTERFACE_RADIO, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_ENTER_ADMIN_PASSWORD, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_CONFIRM_ADMIN_PASSWORD, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_ADMIN_PASSWORD, 0, adjustment, 0, 0, TRUE);
+  moveControl(IDC_ADMIN_CONFIRM, 0, adjustment, 0, 0, TRUE);
+
   return FALSE;
 }
 
